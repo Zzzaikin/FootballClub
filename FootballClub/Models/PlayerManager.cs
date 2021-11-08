@@ -1,18 +1,14 @@
-﻿using FootballClub.Models;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 
-namespace FootballClub.Controllers
+namespace FootballClub.Models
 {
     public class PlayerManager
     {
         public Guid Id { get; set; }
 
-        [Column("PersonId")]
-        public Person Person { get; set; }
+        public Guid? PersonId { get; set; }
 
-        [Column("PlayerId")]
-        public Player Player { get; set; }
+        public Guid? PlayerId { get; set; }
 
         public float HoursPayment { get; set; }
     }

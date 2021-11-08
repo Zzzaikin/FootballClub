@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballClub.Models
 {
@@ -7,11 +6,9 @@ namespace FootballClub.Models
     {
         public Guid Id { get; set; }
 
-        [Column("PersonId")]
-        public Person Person { get; set; }
+        public Guid? PersonId { get; set; }
 
-        [Column("RecoveryReasonId")]
-        public RecoveryReason RecoveryReason { get; set; }
+        public Guid? RecoveryReasonId { get; set; }
 
         public string Result { get; set; }
     }

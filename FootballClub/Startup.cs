@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace FootballClub
 {
@@ -31,7 +32,8 @@ namespace FootballClub
             });
 
             services.AddDbContext<FootballClubDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("FootballClub")));
+                options.UseMySql(Configuration.GetConnectionString("FootballClub"), 
+                    new MySqlServerVersion(new Version(8, 0, 11))));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,4 @@
-﻿using FootballClub.Controllers;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 
 namespace FootballClub.Models
 {
@@ -8,16 +6,10 @@ namespace FootballClub.Models
     {
         public Guid Id { get; set; }
 
-        [Column("PersonId")]
-        public Person Person { get; set; }
+        public Guid? PersonId { get; set; }
 
-        [Column("ContractId")]
-        public Contract Contract { get; set; }
+        public Guid? ContractId { get; set; }
 
-        [Column("PlayerManagerId")]
-        public PlayerManager PlayerManager { get; set; }
-
-        [Column("DisqualificationId")]
-        public Disqualification Disqualification { get; set; }
+        public Guid? PlayerManagerId { get; set; }
     }
 }

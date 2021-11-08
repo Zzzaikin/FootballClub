@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballClub.Models
 {
@@ -9,8 +8,7 @@ namespace FootballClub.Models
 
         public DateTime Date { get; set; }
 
-        [Column("MatchResultId")]
-        public MatchResult MatchResult { get; set; }
+        public Guid? MatchResultId { get; set; }
 
         public string Duration { get; set; }
 
