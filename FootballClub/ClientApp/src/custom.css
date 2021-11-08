@@ -1,15 +1,63 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #036f7f;
 }
 
 code {
-  color: #E01A76;
+    color: #E01A76;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
+.lowerButtons {
+    margin-top: 200px;
+    text-align: right;
+    width: 250px;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: margin .5s;
+    margin: 0 0 0 -220px;
+}
+
+.wrapper.is-nav-open {
+    margin-left: 0;
+}
+
+.nav {
+    position: relative;
+    width: 250px;
+    height: 100%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.nav__icon {
+    position: absolute;
+    top: 0;
+    right: -60px;
+    padding: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color .3s;
+}
+
+.nav__icon:hover {
+    color: #5eb2ff;
+}
+
+.nav-pills .nav-link.active {
+    width: 190px;
+    background-color: #17a2b8;
+}
+
+.nav {
+    padding: 0;
+}
