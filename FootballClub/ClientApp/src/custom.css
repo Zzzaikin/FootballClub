@@ -14,15 +14,24 @@ code {
 }
 
 .lowerButtons {
-    margin-top: 200px;
-    text-align: right;
+    margin-top: 60vh;
     width: 250px;
+}
+
+.sectionWrapper {
+    float: left;
+    height: 90vh;
+    margin-left: 17vh;
+    margin-top: 5vh;
+}
+
+.tab-content {
+    height: 90vh;
 }
 
 .wrapper {
     display: flex;
     width: 100%;
-    height: 100%;
     transition: margin .5s;
     margin: 0 0 0 -220px;
 }

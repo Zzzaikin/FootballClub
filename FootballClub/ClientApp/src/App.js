@@ -1,11 +1,16 @@
-import React, { Component, useState } from 'react';
-import LeftNav from './components/LeftNav'
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import Section from './components/Section';
+import Layout from './components/Layout'
+import Content from './components/Content';
 
 import './custom.css'
 
 function App() {
     return (
-        <LeftNav/>
+        <BrowserRouter>
+            <Layout />
+        </BrowserRouter>
     );
 }
 

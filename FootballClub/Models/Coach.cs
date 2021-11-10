@@ -8,6 +8,8 @@ namespace FootballClub.Models
 
         public Guid? PersonId { get; set; }
 
+        public Person Person { get; set; }
+
         public float HoursPayment { get; set; }
     }
 }

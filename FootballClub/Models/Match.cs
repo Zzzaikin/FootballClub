@@ -10,6 +10,8 @@ namespace FootballClub.Models
 
         public Guid? MatchResultId { get; set; }
 
+        public MatchResult MatchResult { get; set; }
+
         public string Duration { get; set; }
 
         public int OurTeamScores { get; set; }

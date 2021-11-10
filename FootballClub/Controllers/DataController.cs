@@ -1,6 +1,8 @@
 ﻿using FootballClub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FootballClub.Controllers
 {
@@ -18,14 +20,37 @@ namespace FootballClub.Controllers
             _footballClubDbContext = footballClubDbContext;
         }
 
+        [HttpGet("GetPlayersForSection")]
+        public IActionResult GetPlayersForSection()
+        {
+            var players =
+                 from player in _footballClubDbContext.Players.ToList().Take(6)
+
+                 join person in _footballClubDbContext.Persons.ToList()
+                 on player.PersonId equals person.Id
+                 into persons
+
+                 from playerPerson in persons.DefaultIfEmpty()
+
+                 select player;
+
+            return Ok(players);
+        }
+
         [HttpPost("AddPerson")]
         public IActionResult AddPerson(Person person)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.Persons.Add(person);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.Persons.Add(person);
+            _footballClubDbContext.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPost("AddPlayer")]
+        public IActionResult AddPlayer(Player player)
+        {
+            _footballClubDbContext.Players.Add(player);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -33,11 +58,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddCoach")]
         public IActionResult AddCoach(Coach coach)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.Coaches.Add(coach);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.Coaches.Add(coach);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -45,11 +67,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddContract")]
         public IActionResult AddContract(Contract contract)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.Contracts.Add(contract);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.Contracts.Add(contract);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -57,11 +76,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddPlayerManager")]
         public IActionResult AddPlayerManager(PlayerManager playerManager)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.PlayerManagers.Add(playerManager);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.PlayerManagers.Add(playerManager);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -69,11 +85,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddEmployeeRecovery")]
         public IActionResult AddEmployeeRecovery(EmployeeRecovery employeeRecovery)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.EmployeeRecoveries.Add(employeeRecovery);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.EmployeeRecoveries.Add(employeeRecovery);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -81,11 +94,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddMatch")]
         public IActionResult AddMatch(Match match)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.Matches.Add(match);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.Matches.Add(match);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
@@ -93,11 +103,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddDisqualification")]
         public IActionResult AddDisqualification(Disqualification disqualification)
         {
-            using (_footballClubDbContext)
-            {
-                _footballClubDbContext.Disqualifications.Add(disqualification);
-                _footballClubDbContext.SaveChanges();
-            }
+            _footballClubDbContext.Disqualifications.Add(disqualification);
+            _footballClubDbContext.SaveChanges();
 
             return Ok();
         }
