@@ -1,6 +1,7 @@
 ﻿using FootballClub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +24,8 @@ namespace FootballClub.Controllers
         [HttpGet("GetPlayersForSection")]
         public IActionResult GetPlayersForSection(int from = 0, int count = 9)
         {
+            ValidateIntervalParams(from, count);
+
             var players =
                  from player in _footballClubDbContext.Players.ToList().Skip(@from).Take(count)
 
@@ -40,6 +43,8 @@ namespace FootballClub.Controllers
         [HttpGet("GetCoachesForSection")]
         public IActionResult GetCoachesForSection(int from = 0, int count = 9)
         {
+            ValidateIntervalParams(from, count);
+
             var coaches =
                  from coach in _footballClubDbContext.Coaches.ToList().Skip(@from).Take(count)
 
@@ -57,6 +62,8 @@ namespace FootballClub.Controllers
         [HttpGet("GetPlayerManagersForSection")]
         public IActionResult GetPlayerManagersForSection(int from = 0, int count = 9)
         {
+            ValidateIntervalParams(from, count);
+
             var playerManagers =
                  from playerManager in _footballClubDbContext.PlayerManagers.ToList().Skip(@from).Take(count)
 
@@ -69,6 +76,31 @@ namespace FootballClub.Controllers
                  select playerManager;
 
             return Ok(playerManagers);
+        }
+
+        [HttpGet("GetEmployeeRecoveriesForSection")]
+        public IActionResult GetEmployeeRecoveriesForSection(int from = 0, int count = 9)
+        {
+            ValidateIntervalParams(from, count);
+
+            var employeeRecoveries =
+                 from employeeRecovery in _footballClubDbContext.EmployeeRecoveries.ToList().Skip(@from).Take(count)
+
+                 join person in _footballClubDbContext.Persons.ToList()
+                 on employeeRecovery.PersonId equals person.Id
+                 into persons
+
+                 from playerPerson in persons.DefaultIfEmpty()
+
+                 join recoveryReason in _footballClubDbContext.RecoveryReasons.ToList()
+                 on employeeRecovery.RecoveryReasonId equals recoveryReason.Id
+                 into recoveryReasons
+
+                 from recoveryReason in recoveryReasons.DefaultIfEmpty()
+
+                 select employeeRecovery;
+
+            return Ok(employeeRecoveries);
         }
 
         [HttpPost("AddPerson")]
@@ -141,6 +173,19 @@ namespace FootballClub.Controllers
             _footballClubDbContext.SaveChanges();
 
             return Ok();
+        }
+
+        private void ValidateIntervalParams(int from, int count)
+        {
+            if (from < 0)
+            {
+                throw new Exception($"Parametr {nameof(from)} can not be less than zero");
+            }
+
+            if (count < 0)
+            {
+                throw new Exception($"Parametr {nameof(count)} can not be less than zero");
+            }
         }
     }
 }

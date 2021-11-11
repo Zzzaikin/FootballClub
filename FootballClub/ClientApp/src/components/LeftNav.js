@@ -8,7 +8,7 @@ function LeftNav() {
             <NavbarBrand tag={Link} to="/PlayersSection">Игроки</NavbarBrand>
             <NavbarBrand tag={Link} to="/CoachesSection">Тренеры</NavbarBrand>
             <NavbarBrand tag={Link} to="/PlayerManagersSection">Менеджеры игроков</NavbarBrand>
-            <NavbarBrand tag={Link} to="/RecoverySection">Взыскания</NavbarBrand>
+            <NavbarBrand tag={Link} to="/EmployeeRecoveriesSection">Взыскания</NavbarBrand>
             <NavbarBrand tag={Link} to="/MatchesSection">Матчи</NavbarBrand>
             <NavbarBrand tag={Link} to="/DisqualificationsSection">Дисквалификации</NavbarBrand>
         </div>

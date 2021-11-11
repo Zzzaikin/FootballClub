@@ -48,6 +48,15 @@ code {
     width: 90%
 }
 
+.card-text.smallFont {
+    font-size: 14px;
+    margin-left: 40vh;
+}
+
+.recharts-wrapper {
+    margin-top: 20px;
+}
+
 .tab-content {
     height: 90vh;
 }
