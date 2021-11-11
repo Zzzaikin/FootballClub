@@ -21,10 +21,10 @@ namespace FootballClub.Controllers
         }
 
         [HttpGet("GetPlayersForSection")]
-        public IActionResult GetPlayersForSection()
+        public IActionResult GetPlayersForSection(int from = 0, int count = 9)
         {
             var players =
-                 from player in _footballClubDbContext.Players.ToList().Take(9)
+                 from player in _footballClubDbContext.Players.ToList().Skip(@from).Take(count)
 
                  join person in _footballClubDbContext.Persons.ToList()
                  on player.PersonId equals person.Id
@@ -35,6 +35,40 @@ namespace FootballClub.Controllers
                  select player;
 
             return Ok(players);
+        }
+
+        [HttpGet("GetCoachesForSection")]
+        public IActionResult GetCoachesForSection(int from = 0, int count = 9)
+        {
+            var coaches =
+                 from coach in _footballClubDbContext.Coaches.ToList().Skip(@from).Take(count)
+
+                 join person in _footballClubDbContext.Persons.ToList()
+                 on coach.PersonId equals person.Id
+                 into persons
+
+                 from playerPerson in persons.DefaultIfEmpty()
+
+                 select coach;
+
+            return Ok(coaches);
+        }
+
+        [HttpGet("GetPlayerManagersForSection")]
+        public IActionResult GetPlayerManagersForSection(int from = 0, int count = 9)
+        {
+            var playerManagers =
+                 from playerManager in _footballClubDbContext.PlayerManagers.ToList().Skip(@from).Take(count)
+
+                 join person in _footballClubDbContext.Persons.ToList()
+                 on playerManager.PersonId equals person.Id
+                 into persons
+
+                 from playerPerson in persons.DefaultIfEmpty()
+
+                 select playerManager;
+
+            return Ok(playerManagers);
         }
 
         [HttpPost("AddPerson")]
