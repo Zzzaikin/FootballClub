@@ -24,7 +24,7 @@ namespace FootballClub.Controllers
         public IActionResult GetPlayersForSection()
         {
             var players =
-                 from player in _footballClubDbContext.Players.ToList().Take(6)
+                 from player in _footballClubDbContext.Players.ToList().Take(9)
 
                  join person in _footballClubDbContext.Persons.ToList()
                  on player.PersonId equals person.Id

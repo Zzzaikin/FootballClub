@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FootballClub.Models
 {
@@ -12,7 +13,7 @@ namespace FootballClub.Models
 
         public Guid? PlayerId { get; set; }
 
-        public Player Player { get; set; }
+        public List<Player> Player { get; set; }
 
         public float HoursPayment { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FootballClub.Models
 {
@@ -12,10 +13,10 @@ namespace FootballClub.Models
 
         public Guid? ContractId { get; set; }
 
-        public Contract Contract { get; set; }
+        public List<Contract> Contract { get; set; }
 
         public Guid? PlayerManagerId { get; set; }
 
-        public PlayerManager PlayerManager { get; set; }
+        public List<PlayerManager> PlayerManager { get; set; }
     }
 }

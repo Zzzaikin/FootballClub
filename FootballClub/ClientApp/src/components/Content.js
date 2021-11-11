@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import Section from './Section';
 
 function Content() {
@@ -11,6 +11,7 @@ function Content() {
             <Route path='/RecoverySection' component={Section} />
             <Route path='/MatchesSection' component={Section} />
             <Route path='/DisqualificationsSection' component={Section} />
+            <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );
 }
