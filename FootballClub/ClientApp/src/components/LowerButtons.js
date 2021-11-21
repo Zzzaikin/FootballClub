@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { WRAPPER_REF } from './Layout'
-import { SECTION_WRAPPER_REF } from './Section';
+import { SECTION_WRAPPER_REF, CARD_CONTAINER_REF } from './Section';
 
 function LowerButtons() {
     const [turnButtonCaption, setTurnButtonCaption] = useState("<");        
@@ -14,6 +14,9 @@ function LowerButtons() {
 
         const sectionWrapper = SECTION_WRAPPER_REF.current;
         sectionWrapper.classList.toggle('is-nav-open');
+
+        const cardContainerRef = CARD_CONTAINER_REF.current;
+        cardContainerRef.classList.toggle('is-nav-open');
     }
 
     return (

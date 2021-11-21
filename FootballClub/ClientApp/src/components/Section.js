@@ -1,7 +1,8 @@
-﻿import React, { useState, Component } from 'react';
+﻿import React, { Component } from 'react';
 import Card from './Card';
 
 export let SECTION_WRAPPER_REF;
+export let CARD_CONTAINER_REF;
 
 class Section extends Component {
     constructor(props) {
@@ -9,10 +10,12 @@ class Section extends Component {
 
         this.state = {
             cards: [],
-            sectionWrapperRef: React.createRef()
+            sectionWrapperRef: React.createRef(),
+            cardContainerRef: React.createRef()
         };
 
         SECTION_WRAPPER_REF = this.state.sectionWrapperRef;
+        CARD_CONTAINER_REF = this.state.cardContainerRef;
     }
 
     componentDidMount = () => {
@@ -40,7 +43,7 @@ class Section extends Component {
                     firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
                     secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.name}`}</p>;
                     thirdP = <p class="card-text">{`Сумма: ${cardData.sum}`}</p>;
-                    date = <p class="card-text smallFont">{`Дата: ${dateValue}`}</p>;
+                    date = <p class="card-text card-date">{`Дата: ${dateValue}`}</p>;
                     break;
 
                 case "Matches":
@@ -48,7 +51,7 @@ class Section extends Component {
                     cardHeader = <h5 class="card-title">{`${cardData.ourTeamName} - ${cardData.enemyTeamName}`}</h5>;
                     firstP = <p class="card-text">{`Счёт: ${cardData.ourTeamScores} - ${cardData.enemyTeamScores}`}</p>;
                     secondP = <p class="card-text">{`Длительность: ${cardData.duration}`}</p>;
-                    date = <p class="card-text smallFont">{`Дата: ${dateValue}`}</p>;
+                    date = <p class="card-text card-date">{`Дата: ${dateValue}`}</p>;
                     break;
 
                 case "Disqualifications":
@@ -81,7 +84,9 @@ class Section extends Component {
         return (
             <div ref={SECTION_WRAPPER_REF} class="sectionWrapper is-nav-open">
                 {this.props.miniDashboard}
-                {this.state.cards}
+                <div ref={CARD_CONTAINER_REF} className="cards-container is-nav-open" >
+                    {this.state.cards}
+                </div>
             </div>
         );
     };

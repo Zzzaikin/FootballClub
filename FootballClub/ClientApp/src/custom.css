@@ -12,7 +12,7 @@ code {
     font-size: 16px;
 }
 
-.btn-primary {
+.btn-card {
     margin-top: 20px;
 }
 
@@ -23,13 +23,17 @@ code {
     margin-top: 20px;
 }
 
-    .card card-clicked {
-        display: inline-block;
-        width: 60vh;
-        margin-left: 20px;
-        margin-top: 20px;
-        background-color: azure;
-    }
+.btn-card-deletebtn {
+    float: right;
+}
+
+.card card-clicked {
+    display: inline-block;
+    width: 60vh;
+    margin-left: 20px;
+    margin-top: 20px;
+    background-color: azure;
+}
 
 .btn-primary {
     color: #fff;
@@ -42,19 +46,18 @@ code {
 }
 
     .button-wrapper card-clicked {
-
     }
 
-    .lowerButtons {
-        margin-top: 60vh;
-        width: 250px;
-    }
+.lowerButtons {
+    margin-top: 60vh;
+    width: 250px;
+}
 
 .sectionWrapper {
     float: left;
     height: 90vh;
     margin-left: 15vh;
-    width: 110%
+    width: 90%
 }
 
     .sectionWrapper.is-nav-open {
@@ -121,9 +124,10 @@ code {
     float: left;
 }
 
-.card-text.smallFont {
+.card-date {
     font-size: 14px;
     margin-left: 40vh;
+    margin-top: 3vh;
 }
 
 .recharts-wrapper {
@@ -153,7 +157,15 @@ code {
     border-right: 1px solid #ccc;
 }
 
-.
+.cards-container {
+    margin-left: 0vh;
+    width: 188vh;
+}
+
+    .cards-container.is-nav-open {
+        margin-left: 15vh;
+        width: 140vh;
+    }
 
 .nav__icon {
     position: absolute;
