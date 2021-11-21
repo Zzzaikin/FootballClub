@@ -13,5 +13,7 @@ namespace FootballClub.Models
         public DateTime EndDate { get; set; }
 
         public Guid? PlayerId { get; set; }
+
+        public Player Player { get; set; }
     }
 }

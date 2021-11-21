@@ -12,6 +12,10 @@ namespace FootballClub.Models
 
         public MatchResult MatchResult { get; set; }
 
+        public string OurTeamName { get; set; }
+
+        public string EnemyTeamName { get; set; }
+
         public string Duration { get; set; }
 
         public int OurTeamScores { get; set; }

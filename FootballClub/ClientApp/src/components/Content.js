@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import EmployeeRecoveriesMiniDashboard from './EmployeeRecoveriesMiniDashboard';
+import MatchesMiniDashboard from './MatchesMiniDashboard';
 import Section from './Section';
 
 function Content() {
@@ -11,7 +12,8 @@ function Content() {
             <Route path='/PlayerManagersSection' component={Section} />
             <Route path='/EmployeeRecoveriesSection' render={() =>
                 <Section miniDashboard={<EmployeeRecoveriesMiniDashboard />} match={{ path: "/EmployeeRecoveriesSection"}} />} /> 
-            <Route path='/MatchesSection' component={Section} />
+            <Route path='/MatchesSection' render={() =>
+                <Section miniDashboard={<MatchesMiniDashboard />} match={{ path: "/MatchesSection"}} />} />
             <Route path='/DisqualificationsSection' component={Section} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>

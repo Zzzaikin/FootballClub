@@ -32,18 +32,37 @@ class Section extends Component {
             let secondP;
             let thirdP;
             let date;
+            let dateValue;
 
-            if ((entityName === "EmployeeRecoveries") || (entityName === "Matches")) {
-                let dateValue = cardData.date.split("T")[0];
+            switch (entityName) {
+                case "EmployeeRecoveries":
+                    dateValue = cardData.date.split("T")[0];
+                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
+                    secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.name}`}</p>;
+                    thirdP = <p class="card-text">{`Сумма: ${cardData.sum}`}</p>;
+                    date = <p class="card-text smallFont">{`Дата: ${dateValue}`}</p>;
+                    break;
 
-                firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
-                secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.name}`}</p>;
-                thirdP = <p class="card-text">{`Сумма: ${cardData.sum}`}</p>;
-                date = <p class="card-text smallFont">{`Дата: ${dateValue}`}</p>;
-            } else {
-                firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
-                secondP = <p class="card-text">{`Домашний телефон: ${cardData.person?.homePhoneNumber}`}</p>;
-                thirdP = <p class="card-text">{`Адрес: ${cardData.person?.address}`}</p>;
+                case "Matches":
+                    dateValue = cardData.date.split("T")[0];
+                    cardHeader = <h5 class="card-title">{`${cardData.ourTeamName} - ${cardData.enemyTeamName}`}</h5>;
+                    firstP = <p class="card-text">{`Счёт: ${cardData.ourTeamScores} - ${cardData.enemyTeamScores}`}</p>;
+                    secondP = <p class="card-text">{`Длительность: ${cardData.duration}`}</p>;
+                    date = <p class="card-text smallFont">{`Дата: ${dateValue}`}</p>;
+                    break;
+
+                case "Disqualifications":
+                    cardHeader = <h5 class="card-title">{`${cardData.player?.person?.name}`}</h5>;
+                    firstP = <p class="card-text">{`Причина: ${cardData.name}`}</p>;
+                    secondP = <p class="card-text">{`Начало: ${cardData.startDate.split("T")[0]}`}</p>;
+                    thirdP = <p class="card-text">{`Начало: ${cardData.endDate.split("T")[0]}`}</p>;
+                    break;
+
+                default:
+                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
+                    secondP = <p class="card-text">{`Домашний телефон: ${cardData.person?.homePhoneNumber}`}</p>;
+                    thirdP = <p class="card-text">{`Адрес: ${cardData.person?.address}`}</p>;
+                    break;
             }
 
             return (

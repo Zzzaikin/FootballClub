@@ -46,9 +46,9 @@ namespace FootballClub.Controllers
             ValidateIntervalParams(from, count);
 
             var players =
-                 from player in _footballClubDbContext.Players.ToList().Skip(@from).Take(count)
+                 from player in _footballClubDbContext.Players.Skip(@from).Take(count).ToList()
 
-                 join person in _footballClubDbContext.Persons.ToList()
+                 join person in _footballClubDbContext.Persons
                  on player.PersonId equals person.Id
                  into persons
 
@@ -71,9 +71,9 @@ namespace FootballClub.Controllers
             ValidateIntervalParams(from, count);
 
             var coaches =
-                 from coach in _footballClubDbContext.Coaches.ToList().Skip(@from).Take(count)
+                 from coach in _footballClubDbContext.Coaches.Skip(@from).Take(count).ToList()
                  
-                 join person in _footballClubDbContext.Persons.ToList()
+                 join person in _footballClubDbContext.Persons
                  on coach.PersonId equals person.Id
                  into persons
 
@@ -82,6 +82,60 @@ namespace FootballClub.Controllers
                  select coach;
 
             return Ok(coaches);
+        }
+
+        /// <summary>
+        /// Возвращает матчи на указанном интервале. В основном используется для получения игроков для секции.
+        /// </summary>
+        /// <param name="from">Параметр выборки "От"</param>
+        /// <param name="count">Параметр определяющий количество получемых записей</param>
+        /// <returns>Матчи со статусом запроса</returns>
+        [HttpGet("GetMatchesForSection")]
+        public IActionResult GetMatchesForSection(int from = 0, int count = 9)
+        {
+            ValidateIntervalParams(from, count);
+
+            var matches =
+                from match in _footballClubDbContext.Matches.Skip(@from).Take(count).ToList()
+
+                join matchResult in _footballClubDbContext.MatchResults
+                on match.MatchResultId equals matchResult.Id
+                into matchResults
+
+                from matchResult in matchResults.DefaultIfEmpty()
+
+                select match;
+
+            return Ok(matches);
+        }
+
+        /// <summary>
+        /// Возвращает дисквалификации на указанном интервале. В основном используется для получения игроков для секции.
+        /// </summary>
+        /// <param name="from">Параметр выборки "От"</param>
+        /// <param name="count">Параметр определяющий количество получемых записей</param>
+        /// <returns>Дисквалификации со статусом запроса</returns>
+        [HttpGet("GetDisqualificationsForSection")]
+        public IActionResult GetDisqualificationsForSection(int from = 0, int count = 9)
+        {
+            var disqualifications =
+                from disqualification in _footballClubDbContext.Disqualifications.Skip(@from).Take(count).ToList()
+
+                join player in _footballClubDbContext.Players
+                on disqualification.PlayerId equals player.Id
+                into players
+
+                from player in players.DefaultIfEmpty()
+
+                join person in _footballClubDbContext.Persons
+                on player.PersonId equals person.Id
+                into persons
+
+                from person in persons.DefaultIfEmpty()
+
+                select disqualification;
+
+            return Ok(disqualifications);
         }
 
         /// <summary>
@@ -96,9 +150,9 @@ namespace FootballClub.Controllers
             ValidateIntervalParams(from, count);
 
             var playerManagers =
-                 from playerManager in _footballClubDbContext.PlayerManagers.ToList().Skip(@from).Take(count)
+                 from playerManager in _footballClubDbContext.PlayerManagers.Skip(@from).Take(count).ToList()
 
-                 join person in _footballClubDbContext.Persons.ToList()
+                 join person in _footballClubDbContext.Persons
                  on playerManager.PersonId equals person.Id
                  into persons
 
@@ -121,15 +175,15 @@ namespace FootballClub.Controllers
             ValidateIntervalParams(from, count);
 
             var employeeRecoveries =
-                 from employeeRecovery in _footballClubDbContext.EmployeeRecoveries.ToList().Skip(@from).Take(count)
+                 from employeeRecovery in _footballClubDbContext.EmployeeRecoveries.Skip(@from).Take(count).ToList()
 
-                 join person in _footballClubDbContext.Persons.ToList()
+                 join person in _footballClubDbContext.Persons
                  on employeeRecovery.PersonId equals person.Id
                  into persons
 
                  from playerPerson in persons.DefaultIfEmpty()
 
-                 join recoveryReason in _footballClubDbContext.RecoveryReasons.ToList()
+                 join recoveryReason in _footballClubDbContext.RecoveryReasons
                  on employeeRecovery.RecoveryReasonId equals recoveryReason.Id
                  into recoveryReasons
 

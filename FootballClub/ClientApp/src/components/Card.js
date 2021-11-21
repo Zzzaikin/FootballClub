@@ -8,7 +8,7 @@ function Card(props) {
                 {props.firstParagraph}
                 {props.secondParagraph}
                 {props.thirdParagraph}
-                <div className="buttonWrapper">
+                <div className="buttons-wrapper">
                     <a href="#" class="btn btn-primary">Открыть</a>
                     {props.dateParagraph}
                 </div>

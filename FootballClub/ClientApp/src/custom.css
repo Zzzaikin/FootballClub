@@ -23,16 +23,32 @@ code {
     margin-top: 20px;
 }
 
+    .card card-clicked {
+        display: inline-block;
+        width: 60vh;
+        margin-left: 20px;
+        margin-top: 20px;
+        background-color: azure;
+    }
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
 
-.lowerButtons {
-    margin-top: 60vh;
-    width: 250px;
+.button-wrapper {
+    display: none;
 }
+
+    .button-wrapper card-clicked {
+
+    }
+
+    .lowerButtons {
+        margin-top: 60vh;
+        width: 250px;
+    }
 
 .sectionWrapper {
     float: left;
@@ -65,6 +81,14 @@ code {
     margin-top: 25px;
 }
 
+.matches-minidashboard-section {
+    display: flex;
+    margin-left: 25px;
+    margin-top: 5px;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
 .counter-card-wrapper {
     margin-top: 25px;
 }
@@ -72,6 +96,7 @@ code {
 .counter-card {
     margin: 0;
     margin-top: 10px;
+    margin-left: 30px;
 }
 
 .react-datepicker-wrapper {
@@ -127,6 +152,8 @@ code {
     padding: 20px;
     border-right: 1px solid #ccc;
 }
+
+.
 
 .nav__icon {
     position: absolute;
