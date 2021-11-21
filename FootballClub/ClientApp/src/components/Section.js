@@ -10,7 +10,7 @@ class Section extends Component {
         this.state = {
             cards: [],
             sectionWrapperRef: React.createRef()
-        }
+        };
 
         SECTION_WRAPPER_REF = this.state.sectionWrapperRef;
     }
