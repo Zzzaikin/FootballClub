@@ -105,12 +105,12 @@ namespace FootballClub.Controllers
         {
             if (deltaYears < 0)
             {
-                throw new ArgumentException($"{nameof(deltaYears)} can not be less than zero");
+                throw new ArgumentException($"{nameof(deltaYears)} can not be less than zero.");
             }
 
             if (deltaMonths < 0)
             {
-                throw new ArgumentException($"{nameof(deltaMonths)} can not be less than zero");
+                throw new ArgumentException($"{nameof(deltaMonths)} can not be less than zero.");
             }
         }
 
@@ -123,7 +123,7 @@ namespace FootballClub.Controllers
         {
             if (startDate > endDate)
             {
-                throw new ArgumentException("Start date can not be greater than end date");
+                throw new ArgumentException("Start date can not be greater than end date.");
             }
         }
     }

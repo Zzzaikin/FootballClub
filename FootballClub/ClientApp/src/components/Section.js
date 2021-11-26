@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import Card from './Card';
+import ModalBox from './ModalBox';
 
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
@@ -22,11 +23,10 @@ class Section extends Component {
         this.setCards();
     }
 
-    async setCards() {
-        let path = this.props.match.path;
-        const entityName = path.slice(1).split("S")[0];
+    async setCards(entityName) {
+        const name = entityName || this.props.match.path.slice(1).split("S")[0];
 
-        let response = await fetch(`Data/Get${entityName}ForSection`);
+        let response = await fetch(`Data/Get${name}ForSection`);
         let result = await response.json();
 
         let cardsMarkup = result?.map(cardData => {
@@ -37,7 +37,7 @@ class Section extends Component {
             let date;
             let dateValue;
 
-            switch (entityName) {
+            switch (name) {
                 case "EmployeeRecoveries":
                     dateValue = cardData.date.split("T")[0];
                     firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
@@ -71,7 +71,8 @@ class Section extends Component {
             return (
                 <Card header={cardHeader} firstParagraph={firstP}
                     secondParagraph={secondP} thirdParagraph={thirdP}
-                    dateParagraph={date} />
+                    dateParagraph={date} entityId={cardData.id}
+                    entityName={name} setCardsInSection={this.setCards.bind(this)} />
             );
         });
 
@@ -92,4 +93,4 @@ class Section extends Component {
     };
 }
 
-export default Section;
+export default Section; 

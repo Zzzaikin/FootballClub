@@ -1,5 +1,6 @@
 ﻿using FootballClub.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace FootballClub.Controllers
 
             var coaches =
                  from coach in _footballClubDbContext.Coaches.Skip(@from).Take(count).ToList()
-                 
+
                  join person in _footballClubDbContext.Persons
                  on coach.PersonId equals person.Id
                  into persons
@@ -318,6 +319,40 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Удаляет запись по названию сущности и идентификатору.
+        /// </summary>
+        /// <param name="entityName">Название сущности.</param>
+        /// <param name="id">Идентификатор.</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpDelete("DeleteEntity")]
+        public IActionResult DeleteEntity (string entityName, Guid id)
+        {
+            ValidateEntityNameAndId(entityName, id);
+
+            _footballClubDbContext.Database.ExecuteSqlRaw("DELETE FROM footballclub." + entityName +" WHERE Id = {0}", id);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Валидирует название сущности и её идентификатор.
+        /// </summary>
+        /// <param name="entityName">Название сущности./param>
+        /// <param name="id">Идентификатор сущности.</param>
+        private void ValidateEntityNameAndId(string entityName, Guid id)
+        {
+            if (string.IsNullOrEmpty(entityName))
+            {
+                throw new ArgumentException($"{nameof(entityName)} can not be null or empty.");
+            }
+
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException($"{nameof(id)} can not be empty.");
+            }
+        }
+
+        /// <summary>
         /// Валидирует интервальные параметры.
         /// </summary>
         /// <param name="from">От</param>
@@ -326,12 +361,12 @@ namespace FootballClub.Controllers
         {
             if (from < 0)
             {
-                throw new Exception($"Parametr {nameof(from)} can not be less than zero");
+                throw new Exception($"Parametr {nameof(from)} can not be less than zero.");
             }
 
             if (count < 0)
             {
-                throw new Exception($"Parametr {nameof(count)} can not be less than zero");
+                throw new Exception($"Parametr {nameof(count)} can not be less than zero.");
             }
         }
     }

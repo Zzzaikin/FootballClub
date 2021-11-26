@@ -64,7 +64,7 @@ code {
         float: left;
         height: 90vh;
         margin-left: 15vh;
-        width: 90%
+        width: 90%;
     }
 
 .recharts-responsive-container {
@@ -136,6 +136,8 @@ code {
 
 .tab-content {
     height: 90vh;
+    transition: 0.5s;
+    margin-left: 20vh;
 }
 
 .wrapper {
@@ -149,6 +151,14 @@ code {
         margin-left: 0;
     }
 
+.btn-white-text {
+    color: white;
+}
+
+a:not([href]):not([tabindex]) {
+    color: white;
+}
+
 .nav {
     position: relative;
     width: 250px;
@@ -160,11 +170,13 @@ code {
 .cards-container {
     margin-left: 0vh;
     width: 188vh;
+    transition: 0.5s;
 }
 
     .cards-container.is-nav-open {
         margin-left: 15vh;
         width: 140vh;
+        transition: 0.5s;
     }
 
 .nav__icon {

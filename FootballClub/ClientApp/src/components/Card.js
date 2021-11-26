@@ -1,6 +1,36 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
+import ModalBox from './ModalBox';
 
 function Card(props) {
+    const [modalBoxActive, setModalBoxActive] = useState(true);
+    const [deleteModalBox, setDeleteModalBox] = useState([]);
+
+    const modalBox = () => {
+        return (
+            <ModalBox active={modalBoxActive} setActive={setModalBoxActive} setModalBoxInCard={setDeleteModalBox} >
+                <p className="modal-box-text-body">Вы уверены, что хотите удалить запись?</p>
+                <div className="buttons-wrapper">
+                    <a class="btn btn-danger btn-card btn-card-deletebtn btn-white-text" onClick={() => deleteRow()}>Удалить</a>
+                    <a class="btn btn-primary btn-card btn-white-text" onClick={() => setDeleteModalBox([])}>Отмена</a>
+                </div>
+            </ModalBox>
+        );
+    }
+
+    let entityId = props.entityId;
+
+    async function deleteRow() {
+        let entityName = props.entityName.toLowerCase();
+        let response = await fetch(`/Data/DeleteEntity?entityName=${entityName}&id=${entityId}`, {
+            method: 'DELETE'
+        });
+
+        setDeleteModalBox([]);
+
+        if (response.ok)
+            props.setCardsInSection(props.entityName);
+    }
+
     return (
         <div class="card">
             <div class="card-body">
@@ -10,10 +40,11 @@ function Card(props) {
                 {props.thirdParagraph}
                 <div className="buttons-wrapper">
                     <a href="#" class="btn btn-primary btn-card">Открыть</a>
-                    <a href="#" class="btn btn-danger btn-card btn-card-deletebtn">Удалить</a>
+                    <a class="btn btn-danger btn-card btn-card-deletebtn" onClick={() => setDeleteModalBox(modalBox())}>Удалить</a>
                     {props.dateParagraph}
                 </div>
             </div>
+            {deleteModalBox}
         </div>
     );
 }
