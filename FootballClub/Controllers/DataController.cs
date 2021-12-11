@@ -1,6 +1,8 @@
 ﻿using FootballClub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -15,24 +17,118 @@ namespace FootballClub.Controllers
     public class DataController : ControllerBase
     {
         /// <summary>
+        /// Локализатор.
+        /// </summary>
+        private readonly IStringLocalizer<DataController> _localizer;
+
+        /// <summary>
         /// Логгер.
         /// </summary>
         private readonly ILogger<DataController> _logger;
 
         /// <summary>
-        /// Контекст базы данных.
+        /// Контекст базы данных футбольного клуба.
         /// </summary>
         private readonly FootballClubDbContext _footballClubDbContext;
 
         /// <summary>
-        /// Инициализирует контекст базы данных и логгер.
+        /// Контекст базы данных схемы объектов.
+        /// </summary>
+        private readonly InformationSchemaContext _informationSchemaContext;
+
+        /// <summary>
+        /// Конфигурация.
+        /// </summary>
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Инициализирует контексты базы данных, логгер, конфигурацию и локализатор.
         /// </summary>
         /// <param name="logger">Логгер</param>
-        /// <param name="footballClubDbContext">Контекст базы данных</param>
-        public DataController(ILogger<DataController> logger, FootballClubDbContext footballClubDbContext)
+        /// <param name="footballClubDbContext">Контекст базы данных футбольного клуба</param>
+        /// <param name="localizer">Локализатор.</param>
+        /// <param name="informationSchemaContext">Контекст базы данных схемы объектов</param>
+        /// <param name="configuration">Конфигурация</param>
+        public DataController(IStringLocalizer<DataController> localizer, ILogger<DataController> logger,
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext,
+            IConfiguration configuration)
         {
+            _localizer = localizer;
             _logger = logger;
             _footballClubDbContext = footballClubDbContext;
+            _informationSchemaContext = informationSchemaContext;
+            _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Возвращает человека по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор человека</param>
+        /// <returns>Статус выполнения запроса с человеком по идентификатору</returns>
+        [HttpGet("GetPersonById")]
+        public IActionResult GetPersonById(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException($"{nameof(id)} can not be empty");
+            }
+
+            var persons =
+                from person in _footballClubDbContext.Persons
+                where person.Id == id
+                select person;
+
+            return Ok(persons.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает схему объекта на английском языке.
+        /// </summary>
+        /// <param name="entityName">Название сущности.</param>
+        /// <returns>Результат выполнения запроса со схемой объекта.</returns>
+        [HttpGet("GetEnEntitySchema")]
+        public IActionResult GetEnEntitySchema(string entityName)
+        {
+            if (string.IsNullOrEmpty(entityName))
+            {
+                throw new ArgumentException("Entity name can not be null or empty");
+            }
+
+            var dbName = _configuration.GetValue<string>("DbName");
+            var schemas =
+                from schema in _informationSchemaContext.EntitySchemas
+                where (schema.TableSchema == dbName) && (schema.TableName == entityName)
+                select new
+                {
+                    Column = schema.ColumnName
+                };
+
+            return Ok(schemas.ToList());
+        }
+
+        /// <summary>
+        /// Возвращает схему объекта на русском языке.
+        /// </summary>
+        /// <param name="entityName">Название сущности.</param>
+        /// <returns>Результат выполнения запроса со схемой объекта.</returns>
+        [HttpGet("GetRuEntitySchema")]
+        public IActionResult GetRuEntitySchema(string entityName)
+        {
+            if (string.IsNullOrEmpty(entityName))
+            {
+                throw new ArgumentException("Entity name can not be null or empty");
+            }
+
+            var dbName = _configuration.GetValue<string>("DbName");
+            var schemas =
+                from schema in _informationSchemaContext.EntitySchemas
+                where (schema.TableSchema == dbName) && (schema.TableName == entityName)
+                select new
+                {
+                    Column = _localizer[schema.ColumnName].Value
+                };
+
+            return Ok(schemas.ToList());
         }
 
         /// <summary>
@@ -325,11 +421,11 @@ namespace FootballClub.Controllers
         /// <param name="id">Идентификатор.</param>
         /// <returns>Статус выполнения запроса.</returns>
         [HttpDelete("DeleteEntity")]
-        public IActionResult DeleteEntity (string entityName, Guid id)
+        public IActionResult DeleteEntity(string entityName, Guid id)
         {
             ValidateEntityNameAndId(entityName, id);
 
-            _footballClubDbContext.Database.ExecuteSqlRaw("DELETE FROM footballclub." + entityName +" WHERE Id = {0}", id);
+            _footballClubDbContext.Database.ExecuteSqlRaw("DELETE FROM footballclub." + entityName + " WHERE Id = {0}", id);
 
             return Ok();
         }
@@ -337,14 +433,11 @@ namespace FootballClub.Controllers
         /// <summary>
         /// Валидирует название сущности и её идентификатор.
         /// </summary>
-        /// <param name="entityName">Название сущности./param>
-        /// <param name="id">Идентификатор сущности.</param>
+        /// <param name="entityName">Название сущности/param>
+        /// <param name="id">Идентификатор сущности</param>
         private void ValidateEntityNameAndId(string entityName, Guid id)
         {
-            if (string.IsNullOrEmpty(entityName))
-            {
-                throw new ArgumentException($"{nameof(entityName)} can not be null or empty.");
-            }
+            ValidateEntityName(entityName);
 
             if (id == Guid.Empty)
             {
@@ -353,10 +446,22 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Валидирует имя сущности.
+        /// </summary>
+        /// <param name="entityName">Имя сущности</param>
+        private void ValidateEntityName(string entityName)
+        {
+            if (string.IsNullOrEmpty(entityName))
+            {
+                throw new ArgumentException($"{nameof(entityName)} can not be null or empty.");
+            }
+        }
+
+        /// <summary>
         /// Валидирует интервальные параметры.
         /// </summary>
         /// <param name="from">От</param>
-        /// <param name="count">Количество.</param>
+        /// <param name="count">Количество</param>
         private void ValidateIntervalParams(int from, int count)
         {
             if (from < 0)

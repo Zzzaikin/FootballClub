@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import CardPage from './CardPage';
 import EmployeeRecoveriesMiniDashboard from './EmployeeRecoveriesMiniDashboard';
 import MatchesMiniDashboard from './MatchesMiniDashboard';
 import Section from './Section';
@@ -15,6 +16,7 @@ function Content() {
             <Route path='/MatchesSection' render={() =>
                 <Section miniDashboard={<MatchesMiniDashboard />} match={{ path: "/MatchesSection"}} />} />
             <Route path='/DisqualificationsSection' component={Section} />
+            <Route path='/PlayersCardPage' render={() => <CardPage />} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );

@@ -1,13 +1,13 @@
 ﻿import React, { useState } from 'react';
 import ModalBox from './ModalBox';
+import { Link } from 'react-router-dom';
 
 function Card(props) {
-    const [modalBoxActive, setModalBoxActive] = useState(true);
     const [deleteModalBox, setDeleteModalBox] = useState([]);
 
     const modalBox = () => {
         return (
-            <ModalBox active={modalBoxActive} setActive={setModalBoxActive} setModalBoxInCard={setDeleteModalBox} >
+            <ModalBox setModalBoxInCard={setDeleteModalBox} >
                 <p className="modal-box-text-body">Вы уверены, что хотите удалить запись?</p>
                 <div className="buttons-wrapper">
                     <a class="btn btn-danger btn-card btn-card-deletebtn btn-white-text" onClick={() => deleteRow()}>Удалить</a>
@@ -39,7 +39,9 @@ function Card(props) {
                 {props.secondParagraph}
                 {props.thirdParagraph}
                 <div className="buttons-wrapper">
-                    <a href="#" class="btn btn-primary btn-card">Открыть</a>
+                    <Link to={`/${props.entityName}CardPage?id=${props.entityId}`} >
+                        <a class="btn btn-primary btn-card">Открыть</a>
+                    </Link>
                     <a class="btn btn-danger btn-card btn-card-deletebtn" onClick={() => setDeleteModalBox(modalBox())}>Удалить</a>
                     {props.dateParagraph}
                 </div>

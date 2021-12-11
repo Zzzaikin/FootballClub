@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +21,7 @@ namespace FootballClub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddControllersWithViews();
 
@@ -33,6 +33,10 @@ namespace FootballClub
 
             services.AddDbContext<FootballClubDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("FootballClub"), 
+                    new MySqlServerVersion(new Version(8, 0, 11))));
+
+            services.AddDbContext<InformationSchemaContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("InformationSchema"),
                     new MySqlServerVersion(new Version(8, 0, 11))));
         }
 

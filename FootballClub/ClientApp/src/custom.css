@@ -56,14 +56,13 @@ code {
 .sectionWrapper {
     float: left;
     height: 90vh;
-    margin-left: 15vh;
-    width: 90%
+    width: 90%;
+    margin-left: 10vh;
 }
 
     .sectionWrapper.is-nav-open {
         float: left;
         height: 90vh;
-        margin-left: 15vh;
         width: 90%;
     }
 
@@ -137,7 +136,7 @@ code {
 .tab-content {
     height: 90vh;
     transition: 0.5s;
-    margin-left: 20vh;
+    margin-left: 30vh;
 }
 
 .wrapper {
@@ -158,6 +157,17 @@ code {
 a:not([href]):not([tabindex]) {
     color: white;
 }
+
+a {
+    color: #0060B6;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #000000;
+        text-decoration: none;
+        cursor: pointer;
+    }
 
 .nav {
     position: relative;

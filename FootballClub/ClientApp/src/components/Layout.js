@@ -3,7 +3,7 @@ import Content from './Content';
 import LeftNav from './LeftNav';
 import LowerButtons from './LowerButtons';
 
-import '../css/LeftNav.css';
+import '../styles/LeftNav.css';
 
 export let WRAPPER_REF;
 

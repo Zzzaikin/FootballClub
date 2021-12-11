@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
 import Card from './Card';
-import ModalBox from './ModalBox';
 
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
