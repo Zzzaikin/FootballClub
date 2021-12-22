@@ -4,6 +4,7 @@ import CardPage from './CardPage';
 import EmployeeRecoveriesMiniDashboard from './EmployeeRecoveriesMiniDashboard';
 import MatchesMiniDashboard from './MatchesMiniDashboard';
 import Section from './Section';
+import EntityContent from './EntityContent';
 
 function Content() {
     return (
@@ -16,7 +17,13 @@ function Content() {
             <Route path='/MatchesSection' render={() =>
                 <Section miniDashboard={<MatchesMiniDashboard />} match={{ path: "/MatchesSection"}} />} />
             <Route path='/DisqualificationsSection' component={Section} />
-            <Route path='/PlayersCardPage' render={() => <CardPage />} />
+
+            <Route path='/PlayersCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/CoachesCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/PlayerManagersCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/MatchesCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent />} />} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );

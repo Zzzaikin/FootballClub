@@ -39,8 +39,8 @@ function Card(props) {
                 {props.secondParagraph}
                 {props.thirdParagraph}
                 <div className="buttons-wrapper">
-                    <Link to={`/${props.entityName}CardPage?id=${props.entityId}`} >
-                        <a class="btn btn-primary btn-card">Открыть</a>
+                    <Link className="btn btn-primary btn-card" to={`/${props.entityName}CardPage?id=${props.entityId}`} >
+                        Открыть
                     </Link>
                     <a class="btn btn-danger btn-card btn-card-deletebtn" onClick={() => setDeleteModalBox(modalBox())}>Удалить</a>
                     {props.dateParagraph}

@@ -8,9 +8,7 @@ import '../styles/LeftNav.css';
 export let WRAPPER_REF;
 
 function Layout() {
-
-    const [wrapperRef, setWrapperRef] = useState(React.createRef());
-    WRAPPER_REF = wrapperRef;
+    WRAPPER_REF = React.createRef();
 
     return (
         <div ref={WRAPPER_REF} className="wrapper is-nav-open">

@@ -7,10 +7,6 @@ namespace FootballClub.Models
     {
         public Guid Id { get; set; }
 
-        public Guid? PlayerId { get; set; }
-
-        public List<Player> Player { get; set; }
-
         public float Sum { get; set; }
 
         public DateTime StartDate { get; set; }

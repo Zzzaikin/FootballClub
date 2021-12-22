@@ -15,5 +15,8 @@ namespace FootballClub.Models
 
         [Column("TABLE_NAME")]
         public string TableName { get; set; }
+
+        [Column("ORDINAL_POSITION")]
+        public int OrdinalPosition { get; set; }
     }
 }

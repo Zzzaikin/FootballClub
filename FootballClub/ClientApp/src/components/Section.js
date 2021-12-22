@@ -9,13 +9,11 @@ class Section extends Component {
         super(props);
 
         this.state = {
-            cards: [],
-            sectionWrapperRef: React.createRef(),
-            cardContainerRef: React.createRef()
+            cards: []
         };
 
-        SECTION_WRAPPER_REF = this.state.sectionWrapperRef;
-        CARD_CONTAINER_REF = this.state.cardContainerRef;
+        SECTION_WRAPPER_REF = React.createRef();
+        CARD_CONTAINER_REF = React.createRef();
     }
 
     componentDidMount = () => {
@@ -25,7 +23,7 @@ class Section extends Component {
     async setCards(entityName) {
         const name = entityName || this.props.match.path.slice(1).split("S")[0];
 
-        let response = await fetch(`Data/Get${name}ForSection`);
+        let response = await fetch(`Data/Get${name}`);
         let result = await response.json();
 
         let cardsMarkup = result?.map(cardData => {
@@ -54,7 +52,7 @@ class Section extends Component {
                     break;
 
                 case "Disqualifications":
-                    cardHeader = <h5 class="card-title">{`${cardData.player?.person?.name}`}</h5>;
+                    cardHeader = <h5 class="card-title">{`${cardData.person?.name}`}</h5>;
                     firstP = <p class="card-text">{`Причина: ${cardData.name}`}</p>;
                     secondP = <p class="card-text">{`Начало: ${cardData.startDate.split("T")[0]}`}</p>;
                     thirdP = <p class="card-text">{`Начало: ${cardData.endDate.split("T")[0]}`}</p>;

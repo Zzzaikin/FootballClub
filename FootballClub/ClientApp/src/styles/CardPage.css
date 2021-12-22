@@ -1,4 +1,9 @@
-﻿.buttons-container {
+﻿:root {
+    --dropdown-start-width: 100%;
+}
+
+.buttons-container {
+    margin-left: 80px;
     display: flex;
 }
 
@@ -8,4 +13,41 @@
 
 .card-main-container {
     margin-top: 20px;
+    margin-left: 45px;
+}
+
+.input-info {
+    margin-top: 30px;
+}
+
+.input {
+    -webkit-text-stroke-width: thin;
+}
+
+.inputs-container {
+    display: flex;
+    margin-top: 60px;
+}
+
+.card-with-inputs {
+    width: 65vh !important;
+    margin-left: 80px !important;
+}
+
+.custom-select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: calc(1.5em + 1rem + 6px);
+    font-size: 20px;
+}
+
+.custom-form-control {
+    padding: 0 !important;
+}
+
+.custom-input-group-prepend {
+    position: relative;
+    flex: 1 1;
+    min-width: 0;
+    margin-bottom: 0;
 }

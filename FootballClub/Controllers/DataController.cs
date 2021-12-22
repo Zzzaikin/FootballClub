@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace FootballClub.Controllers
@@ -63,47 +65,211 @@ namespace FootballClub.Controllers
         /// <summary>
         /// Возвращает человека по идентификатору.
         /// </summary>
-        /// <param name="id">Идентификатор человека</param>
-        /// <returns>Статус выполнения запроса с человеком по идентификатору</returns>
-        [HttpGet("GetPersonById")]
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Статус выполнения запроса с человеком, найденным по идентификатору.</returns>
+        [HttpGet("GetPersonsById")]
         public IActionResult GetPersonById(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                throw new ArgumentException($"{nameof(id)} can not be empty");
-            }
+            ValidateId(id);
 
-            var persons =
-                from person in _footballClubDbContext.Persons
+            var personById =
+                from person in _footballClubDbContext.Persons.ToList()
                 where person.Id == id
+
                 select person;
 
-            return Ok(persons.FirstOrDefault());
+            return Ok(personById.FirstOrDefault());
         }
 
         /// <summary>
-        /// Возвращает схему объекта на английском языке.
+        /// Возвращает игрока по идентификатору.
         /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <returns>Результат выполнения запроса со схемой объекта.</returns>
-        [HttpGet("GetEnEntitySchema")]
-        public IActionResult GetEnEntitySchema(string entityName)
+        /// <param name="id">Идентификатор.</param>
+        /// <returns>Результат выполнения запроса с игроком.</returns>
+        [HttpGet("GetPlayersById")]
+        public IActionResult GetPlayerById(Guid id)
         {
-            if (string.IsNullOrEmpty(entityName))
-            {
-                throw new ArgumentException("Entity name can not be null or empty");
-            }
+            ValidateId(id);
 
-            var dbName = _configuration.GetValue<string>("DbName");
-            var schemas =
-                from schema in _informationSchemaContext.EntitySchemas
-                where (schema.TableSchema == dbName) && (schema.TableName == entityName)
+            var playerById =
+                from player in _footballClubDbContext.Players.ToList()
+                where player.Id == id
+
+                join person in _footballClubDbContext.Persons
+                on player.PersonId equals person.Id
+                into persons
+
+                from playerPerson in persons.DefaultIfEmpty()
+
+                select player;
+
+            return Ok(playerById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает тренера по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Результат выполнения запроса с тренером.</returns>
+        [HttpGet("GetCoachesById")]
+        public IActionResult GetCoachById(Guid id)
+        {
+            ValidateId(id);
+
+            var coacheById =
+                from coach in _footballClubDbContext.Coaches.ToList()
+                where coach.Id == id
+
+                join person in _footballClubDbContext.Persons
+                on coach.Id equals person.Id
+                into persons
+
+                from coachPerson in persons.DefaultIfEmpty()
+
+                select coach;
+
+            return Ok(coacheById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает менеджера игрока по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Результат выполнения запроса с менеджером игрока.</returns>
+        [HttpGet("GetPlayerManagersById")]
+        public IActionResult GetPlayerManagerById(Guid id)
+        {
+            ValidateId(id);
+
+            var playerManagerById =
+                from playerManager in _footballClubDbContext.PlayerManagers.ToList()
+                where playerManager.Id == id
+
+                join person in _footballClubDbContext.Persons
+                on playerManager.Id equals person.Id
+                into persons
+
+                from playerManagerPerson in persons.DefaultIfEmpty()
+
+                select playerManager;
+
+            return Ok(playerManagerById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает взыскание с сотрудника по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Результат выполнения запроса с взысканием с сотрудника.</returns>
+        [HttpGet("GetEmployeeRecoveriesById")]
+        public IActionResult GetEmployeeRecoveryById(Guid id)
+        {
+            ValidateId(id);
+
+            var employeeRecoveriesById =
+                from employeeRecovery in _footballClubDbContext.EmployeeRecoveries
+                where employeeRecovery.Id == id
+
+                select employeeRecovery;
+
+            return Ok(employeeRecoveriesById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает матч по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Результат выполнения запроса матчем.</returns>
+        [HttpGet("GetMatchesById")]
+        public IActionResult GetMatchById(Guid id)
+        {
+            ValidateId(id);
+
+            var matchesById =
+                from match in _footballClubDbContext.Matches
+                where match.Id == id
+
+                select match;
+
+            return Ok(matchesById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает дисквалификацию по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Статус выполнения запроса с дисквалификацией</returns>
+        [HttpGet("GetDisqualificationsById")]
+        public IActionResult GetDisqualificationById(Guid id)
+        {
+            ValidateId(id);
+
+            var disqualificationsById =
+                from disqualification in _footballClubDbContext.Disqualifications
+                where disqualification.Id == id
+
+                select disqualification;
+
+            return Ok(disqualificationsById.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Возвращает объект options для отображения в select лукапных полей.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options.</returns>
+        [HttpGet("GetPlayerOptions")]
+        public IActionResult GetPlayersOptions(Guid selected, int from = 0, int count = 15)
+        {
+            ValidateIntervalParams(from, count);
+
+            var playersOptions =
+                from playerOption in _footballClubDbContext.Players.Skip(@from).Take(count).ToList()
+
+                join person in _footballClubDbContext.Persons
+                on playerOption.PersonId equals person.Id
+                into persons
+
+                from playerPerson in persons.DefaultIfEmpty()
+
                 select new
                 {
-                    Column = schema.ColumnName
+                    Id = playerOption.Id,
+                    DisplayValue = playerPerson.Name
                 };
 
-            return Ok(schemas.ToList());
+                var playersOptionsInList = playersOptions.ToList();
+
+            if (selected == Guid.Empty)
+                return Ok(playersOptionsInList);
+
+            var selectedPlayerOption = playersOptionsInList.Find(option => option.Id == selected);
+
+            if (selectedPlayerOption != null)
+                return Ok(playersOptionsInList);
+
+            var selectedPlayerOptions =
+                from playerOption in _footballClubDbContext.Players.ToList()
+
+                join person in _footballClubDbContext.Persons
+                on playerOption.PersonId equals person.Id
+                into persons
+
+                from playerPerson in persons.DefaultIfEmpty()
+
+                where playerOption.Id == selected
+
+                select new
+                {
+                    Id = playerOption.Id,
+                    DisplayValue = playerPerson.Name
+                };
+
+            var firstSelectedOption = selectedPlayerOptions.First();
+            playersOptionsInList.Add(firstSelectedOption);
+
+            return Ok(playersOptionsInList);
         }
 
         /// <summary>
@@ -123,9 +289,12 @@ namespace FootballClub.Controllers
             var schemas =
                 from schema in _informationSchemaContext.EntitySchemas
                 where (schema.TableSchema == dbName) && (schema.TableName == entityName)
+                orderby schema.OrdinalPosition
                 select new
                 {
-                    Column = _localizer[schema.ColumnName].Value
+                    TableName = schema.TableName,
+                    LocalizedColumnName = _localizer[schema.ColumnName].Value,
+                    DataBaseColumnName = schema.ColumnName
                 };
 
             return Ok(schemas.ToList());
@@ -137,8 +306,8 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Игроков со статусом запроса</returns>
-        [HttpGet("GetPlayersForSection")]
-        public IActionResult GetPlayersForSection(int from = 0, int count = 9)
+        [HttpGet("GetPlayers")]
+        public IActionResult GetPlayers(int from = 0, int count = 9)
         {
             ValidateIntervalParams(from, count);
 
@@ -162,8 +331,8 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Тренеров со статусом запроса</returns>
-        [HttpGet("GetCoachesForSection")]
-        public IActionResult GetCoachesForSection(int from = 0, int count = 9)
+        [HttpGet("GetCoaches")]
+        public IActionResult GetCoaches(int from = 0, int count = 9)
         {
             ValidateIntervalParams(from, count);
 
@@ -187,8 +356,8 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Матчи со статусом запроса</returns>
-        [HttpGet("GetMatchesForSection")]
-        public IActionResult GetMatchesForSection(int from = 0, int count = 9)
+        [HttpGet("GetMatches")]
+        public IActionResult GetMatches(int from = 0, int count = 9)
         {
             ValidateIntervalParams(from, count);
 
@@ -212,20 +381,14 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Дисквалификации со статусом запроса</returns>
-        [HttpGet("GetDisqualificationsForSection")]
-        public IActionResult GetDisqualificationsForSection(int from = 0, int count = 9)
+        [HttpGet("GetDisqualifications")]
+        public IActionResult GetDisqualifications(int from = 0, int count = 9)
         {
             var disqualifications =
                 from disqualification in _footballClubDbContext.Disqualifications.Skip(@from).Take(count).ToList()
 
-                join player in _footballClubDbContext.Players
-                on disqualification.PlayerId equals player.Id
-                into players
-
-                from player in players.DefaultIfEmpty()
-
                 join person in _footballClubDbContext.Persons
-                on player.PersonId equals person.Id
+                on disqualification.PersonId equals person.Id
                 into persons
 
                 from person in persons.DefaultIfEmpty()
@@ -241,8 +404,8 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Менеджеров игроков со статусом запроса</returns>
-        [HttpGet("GetPlayerManagersForSection")]
-        public IActionResult GetPlayerManagersForSection(int from = 0, int count = 9)
+        [HttpGet("GetPlayerManagers")]
+        public IActionResult GetPlayerManagers(int from = 0, int count = 9)
         {
             ValidateIntervalParams(from, count);
 
@@ -266,8 +429,8 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Взыскания с игроков со статусом запроса</returns>
-        [HttpGet("GetEmployeeRecoveriesForSection")]
-        public IActionResult GetEmployeeRecoveriesForSection(int from = 0, int count = 9)
+        [HttpGet("GetEmployeeRecoveries")]
+        public IActionResult GetEmployeeRecoveries(int from = 0, int count = 9)
         {
             ValidateIntervalParams(from, count);
 
@@ -438,7 +601,16 @@ namespace FootballClub.Controllers
         private void ValidateEntityNameAndId(string entityName, Guid id)
         {
             ValidateEntityName(entityName);
+            ValidateId(id);
+        }
 
+        /// <summary>
+        /// Валидирует идентификатор.
+        /// </summary>
+        /// <param name="id">Идентификатор.</param>
+        /// <exception cref="ArgumentException">Исключение пробрасывается, когда идентификатор пустой.</exception>
+        private void ValidateId(Guid id)
+        {
             if (id == Guid.Empty)
             {
                 throw new ArgumentException($"{nameof(id)} can not be empty.");

@@ -3,20 +3,25 @@ import { WRAPPER_REF } from './Layout'
 import { SECTION_WRAPPER_REF, CARD_CONTAINER_REF } from './Section';
 
 function LowerButtons() {
-    const [turnButtonCaption, setTurnButtonCaption] = useState("<");        
+    const [turnButtonCaption, setTurnButtonCaption] = useState("<");
 
     function onTurnButtonClick(e) {
         const caption = turnButtonCaption === ">" ? "<" : ">";
         setTurnButtonCaption(caption);
 
-        const wrapper = WRAPPER_REF.current;
-        wrapper.classList.toggle('is-nav-open');
+        const wrapperRefs = [WRAPPER_REF, SECTION_WRAPPER_REF, CARD_CONTAINER_REF];
 
-        const sectionWrapper = SECTION_WRAPPER_REF.current;
-        sectionWrapper.classList.toggle('is-nav-open');
+        wrapperRefs.forEach(ref => {
+            if (!ref)
+                return;
 
-        const cardContainerRef = CARD_CONTAINER_REF.current;
-        cardContainerRef.classList.toggle('is-nav-open');
+            const wrapper = ref.current;
+
+            if (!wrapper)
+                return;
+
+            wrapper.classList.toggle('is-nav-open');
+        });
     }
 
     return (
