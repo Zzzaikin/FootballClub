@@ -126,6 +126,12 @@
   <data name="ContractId" xml:space="preserve">
     <value>Контракт</value>
   </data>
+  <data name="ContractSum" xml:space="preserve">
+    <value>Контракт на сумму:</value>
+  </data>
+  <data name="Currensy" xml:space="preserve">
+    <value>руб.</value>
+  </data>
   <data name="Date" xml:space="preserve">
     <value>Дата</value>
   </data>

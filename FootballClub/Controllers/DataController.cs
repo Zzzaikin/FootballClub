@@ -214,13 +214,13 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
-        /// Возвращает объект options для отображения в select лукапных полей.
+        /// Возвращает объект options игроков для отображения в select.
         /// </summary>
         /// <param name="from">Параметр "От"</param>
         /// <param name="count">Параметр "Количество"</param>
-        /// <returns>Результат выполнения запроса с объектом options.</returns>
+        /// <returns>Результат выполнения запроса с объектом options игроков.</returns>
         [HttpGet("GetPlayerOptions")]
-        public IActionResult GetPlayersOptions(Guid selected, int from = 0, int count = 15)
+        public IActionResult GetPlayersOptions(int from = 0, int count = 15)
         {
             ValidateIntervalParams(from, count);
 
@@ -239,37 +239,99 @@ namespace FootballClub.Controllers
                     DisplayValue = playerPerson.Name
                 };
 
-                var playersOptionsInList = playersOptions.ToList();
+            return Ok(playersOptions);
+        }
 
-            if (selected == Guid.Empty)
-                return Ok(playersOptionsInList);
+        /// <summary>
+        /// Возвращает объект options контрактов для отображения в select.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options контрактов.</returns>
+        [HttpGet("GetContractOptions")]
+        public IActionResult GetContactsOptions(int from = 0, int count = 15)
+        {
+            ValidateIntervalParams(from, count);
 
-            var selectedPlayerOption = playersOptionsInList.Find(option => option.Id == selected);
-
-            if (selectedPlayerOption != null)
-                return Ok(playersOptionsInList);
-
-            var selectedPlayerOptions =
-                from playerOption in _footballClubDbContext.Players.ToList()
-
-                join person in _footballClubDbContext.Persons
-                on playerOption.PersonId equals person.Id
-                into persons
-
-                from playerPerson in persons.DefaultIfEmpty()
-
-                where playerOption.Id == selected
+            var contractsOptions =
+                from contractOption in _footballClubDbContext.Contracts.Skip(@from).Take(count)
 
                 select new
                 {
-                    Id = playerOption.Id,
-                    DisplayValue = playerPerson.Name
+                    Id = contractOption.Id,
+                    DisplayValue = $"{_localizer["ContractSum"].Value} {contractOption.Sum}"
+                };
+            
+            return Ok(contractsOptions);
+        }
+
+        /// <summary>
+        /// Возвращает объект options сотрудников для отображения в select.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options сотрудников.</returns>
+        [HttpGet("GetPersonOptions")]
+        public IActionResult GetPersonsOptions(int from = 0, int count = 0)
+        {
+            ValidateIntervalParams(from, count);
+
+            var personsOptions =
+                from personOption in _footballClubDbContext.Persons.Skip(@from).Take(count)
+
+                select new
+                {
+                    Id = personOption.Id,
+                    DisplayValue = personOption.Name
                 };
 
-            var firstSelectedOption = selectedPlayerOptions.First();
-            playersOptionsInList.Add(firstSelectedOption);
+            return Ok(personsOptions);
+        }
 
-            return Ok(playersOptionsInList);
+        /// <summary>
+        /// Возвращает объект options причин взысканий для отображения в select.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options причин взысканий.</returns>
+        [HttpGet("GetRecoveryReasonOptions")]
+        public IActionResult GetRecoveryReasonsOptions(int from = 0, int count = 0)
+        {
+            ValidateIntervalParams(from, count);
+
+            var recoveryReasonOptions =
+                from recoveryReasonOption in _footballClubDbContext.RecoveryReasons.Skip(@from).Take(count)
+
+                select new
+                {
+                    Id = recoveryReasonOption.Id,
+                    DisplayValue = recoveryReasonOption.DisplayName
+                };
+
+            return Ok(recoveryReasonOptions);
+        }
+
+        /// <summary>
+        /// Возвращает объект options результатов матчей для отображения в select.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options результатов матчей.</returns>
+        [HttpGet("GetMatchResultOptions")]
+        public IActionResult GetMatchResultsOptions(int from = 0, int count = 0)
+        {
+            ValidateIntervalParams(from, count);
+
+            var matchResultOptions =
+                from matchResultOption in _footballClubDbContext.MatchResults.Skip(@from).Take(count)
+
+                select new
+                {
+                    Id = matchResultOption.Id,
+                    DisplayValue = matchResultOption.DisplayName
+                };
+
+            return Ok(matchResultOptions);
         }
 
         /// <summary>

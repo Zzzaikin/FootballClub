@@ -61,8 +61,6 @@ export default function EntityContentOnCardPage(props) {
     function getMappedInputsBySchema(schema, entity) {
         validateSchema(schema);
 
-        const entityName = schema[0].tableName;
-
         if (!entity) {
             throw new Error("Entity is not defined");
         }
@@ -78,22 +76,23 @@ export default function EntityContentOnCardPage(props) {
             const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
             let inputComponent;
 
-            if (column.dataBaseColumnName.includes("Phone")) {
+            if (dataBaseColumnName.includes("Phone")) {
                 inputComponent =
                     <InputMask
                         mask="+\7(999)999 99 99"
                         maskChar=" " type="text"
                         className="form-control"
                         aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={entity[columnName]} />;
-            } else if (column.dataBaseColumnName.endsWith("Id")) {
+                        defaultValue={entity[columnName]}
+                        name={dataBaseColumnName} />;
+            } else if (dataBaseColumnName.endsWith("Id")) {
                 inputComponent =
-                    <div type="text" className="input-group-prepend custom-input-group-prepend">
+                    <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
                         <CustomSelect columnName={dataBaseColumnName} selected={entity[columnName]} />
                     </div>
             } else {
                 inputComponent =
-                    <input type="text" className="form-control"
+                    <input type="text" className="form-control" name={dataBaseColumnName}
                         aria-describedby="inputGroup-sizing-sm"
                         defaultValue={entity[columnName]} />;
             }
@@ -130,12 +129,12 @@ export default function EntityContentOnCardPage(props) {
     }
 
     return (
-        <div className="inputs-container">
+        <form className="inputs-container">
             {personInfo}
             <InputsCard
                 header={"Основная информация"}
                 inputs={entityInputs}
             />
-        </div>
+        </form>
     );
 }

@@ -23,32 +23,31 @@ export default function CustomSelect(props) {
 
         const entityName = columnName.replace("Id", "");
         const selectedId = props.selected;
-        let selectedParam = "";
 
-        if (selectedId !== null)
-            selectedParam = `selected=${selectedId}&`;
-
-        let response = await fetch(`/Data/Get${entityName}Options?${selectedParam}from=${from}&count=${count}`);
+        let response = await fetch(`/Data/Get${entityName}Options?from=${from}&count=${count}`);
         let options = await response.json();
 
         const mappedOptions = options.map((option) => {
             return (
-                <option value={option.id}>{option.displayValue}</option>
+                <option defaultValue={option.id}>{option.displayValue}</option>
             );
         });
 
         const selected = options.find(option => option.id === selectedId);
 
-        const selectedOption =
-            <option selected value={selected.id}>{selected.displayValue}</option>;
-        mappedOptions.push(selectedOption);
+        if (selected) {
+            const selectedOption =
+                <option selected value={selected.id}>{selected.displayValue}</option>;
+            mappedOptions.push(selectedOption);
+        }
 
         setOptions(mappedOptions);
     }
 
     return (
         <div type="text" className="input-group-prepend custom-input-group-prepend">
-            <select className="custom-select" id="inputGroupSelect01">
+            <select className="custom-select" id="inputGroupSelect01" name={props.columnName}>
+                <option value="">Выберите значение...</option>
                 {options}
             </select>
         </div>
