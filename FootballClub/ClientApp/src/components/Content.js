@@ -18,12 +18,12 @@ function Content() {
                 <Section miniDashboard={<MatchesMiniDashboard />} match={{ path: "/MatchesSection"}} />} />
             <Route path='/DisqualificationsSection' component={Section} />
 
-            <Route path='/PlayersCardPage' render={() => <CardPage content={<EntityContent />} />} />
-            <Route path='/CoachesCardPage' render={() => <CardPage content={<EntityContent />} />} />
-            <Route path='/PlayerManagersCardPage' render={() => <CardPage content={<EntityContent />} />} />
-            <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent />} />} />
-            <Route path='/MatchesCardPage' render={() => <CardPage content={<EntityContent />} />} />
-            <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent />} />} />
+            <Route path='/PlayersCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true} />} />} />
+            <Route path='/CoachesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
+            <Route path='/PlayerManagersCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
+            <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false}/>} />} />
+            <Route path='/MatchesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
+            <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false}/>} />} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );

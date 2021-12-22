@@ -16,7 +16,7 @@ namespace FootballClub.Models
 
         public string EnemyTeamName { get; set; }
 
-        public string Duration { get; set; }
+        public int Duration { get; set; }
 
         public int OurTeamScores { get; set; }
 

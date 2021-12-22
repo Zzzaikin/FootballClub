@@ -121,13 +121,76 @@
     <value>Адрес</value>
   </data>
   <data name="Birthday" xml:space="preserve">
-    <value>День рождения</value>
+    <value>Дата рождения</value>
+  </data>
+  <data name="ContractId" xml:space="preserve">
+    <value>Контракт</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Продолжительность (в мин)</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="EnemyTeamName" xml:space="preserve">
+    <value>Команда противника</value>
+  </data>
+  <data name="EnemyTeamScores" xml:space="preserve">
+    <value>Голы противника</value>
   </data>
   <data name="HomePhoneNumber" xml:space="preserve">
     <value>Домашний номер телефона</value>
   </data>
+  <data name="HoursPayment" xml:space="preserve">
+    <value>Почасовая оплата (в руб.)</value>
+  </data>
+  <data name="IsViziting" xml:space="preserve">
+    <value>В гостях</value>
+  </data>
+  <data name="MatchResultId" xml:space="preserve">
+    <value>Результат</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Имя</value>
+  </data>
+  <data name="OurTeamName" xml:space="preserve">
+    <value>Наша команда</value>
+  </data>
+  <data name="OurTeamScores" xml:space="preserve">
+    <value>Голы нашей команды</value>
+  </data>
+  <data name="PenaltyShootOut" xml:space="preserve">
+    <value>С серией пенальти</value>
+  </data>
+  <data name="PersonId" xml:space="preserve">
+    <value>Сотрудник</value>
+  </data>
+  <data name="PlayerId" xml:space="preserve">
+    <value>Игрок</value>
+  </data>
+  <data name="PlayerManagerId" xml:space="preserve">
+    <value>Менеджер</value>
+  </data>
+  <data name="RecoveryReasonId" xml:space="preserve">
+    <value>Причина</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Дата начала</value>
+  </data>
+  <data name="Sum" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
+  <data name="WithFirstOvertime" xml:space="preserve">
+    <value>С первым овертаймом</value>
+  </data>
+  <data name="WithSecondOvertime" xml:space="preserve">
+    <value>Со вторым овераймом</value>
   </data>
   <data name="WorkPhoneNumber" xml:space="preserve">
     <value>Рабочий номер телефона</value>

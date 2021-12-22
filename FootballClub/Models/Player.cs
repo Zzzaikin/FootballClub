@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballClub.Models
 {
@@ -10,6 +11,9 @@ namespace FootballClub.Models
         public Guid? PersonId { get; set; }
 
         public Person Person { get; set; }
+
+        [NotMapped]
+        public bool WhetherToLoadPerson { get => true; }
 
         public Guid? ContractId { get; set; }
 

@@ -40,7 +40,7 @@ export default function EntityContentOnCardPage(props) {
         let person;
 
         if (personId) {
-            if ((entity.whetherToLoadPerson === undefined)) {
+            if ((entity.whetherToLoadPerson)) {
                 let response = await fetch(`/Data/GetPersonsById?id=${personId}`);
                 person = await response.json();
             }
@@ -68,14 +68,13 @@ export default function EntityContentOnCardPage(props) {
         }
         let mappedInputs = schema.map(column => {
 
-            const skip = (column.dataBaseColumnName === "Id")
-                || ((column.dataBaseColumnName === "PersonId")
-                    && (entityName !== "Person"));
+            const dataBaseColumnName = column.dataBaseColumnName;
+
+            const skip = (dataBaseColumnName === "Id") || ((dataBaseColumnName === "PersonId") && (props.skipPersonId));
 
             if (skip)
                 return;
 
-            const dataBaseColumnName = column.dataBaseColumnName;
             const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
             let inputComponent;
 

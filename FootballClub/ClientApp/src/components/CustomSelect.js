@@ -1,10 +1,10 @@
 ﻿import React, { useEffect, useState } from 'react';
 
-export default function CustomOptions(props) {
+export default function CustomSelect(props) {
     const [options, setOptions] = useState();
 
     let from = 0;
-    let count = 15;
+    let count = 1000;
 
     useEffect(() => {
         setSelectOptions();
@@ -44,8 +44,6 @@ export default function CustomOptions(props) {
         mappedOptions.push(selectedOption);
 
         setOptions(mappedOptions);
-
-        from += count;
     }
 
     return (
