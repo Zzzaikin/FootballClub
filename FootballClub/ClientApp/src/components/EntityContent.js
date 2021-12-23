@@ -1,8 +1,9 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useReducer, useState } from 'react';
 import InputMask from 'react-input-mask';
 import Input from './Input/Input';
 import InputsCard from './Input/InputsCard';
 import CustomSelect from './CustomSelect';
+import CardPageDatepicker from './CardPageDatepicker';
 
 import * as SchemaProvider from './Providers/SchemaProvider';
 import * as EntityProvider from './Providers/EntityProvider';
@@ -74,6 +75,7 @@ export default function EntityContentOnCardPage(props) {
                 return;
 
             const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
+            const columnValue = entity[columnName];
             let inputComponent;
 
             if (dataBaseColumnName.includes("Phone")) {
@@ -90,11 +92,22 @@ export default function EntityContentOnCardPage(props) {
                     <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
                         <CustomSelect columnName={dataBaseColumnName} selected={entity[columnName]} />
                     </div>
+            } else if ((dataBaseColumnName.endsWith("Date")) || (dataBaseColumnName.endsWith("Birthday"))) {
+                if (columnValue) {
+                    const indexOfT = columnValue.indexOf('T');
+                    const date = columnValue.substr("T", indexOfT).slice('-');
+
+                    inputComponent =
+                        <CardPageDatepicker date={new Date(date[0], date[1], date[2])} />
+                } else {
+                    inputComponent =
+                        <CardPageDatepicker />
+                }
             } else {
                 inputComponent =
                     <input type="text" className="form-control" name={dataBaseColumnName}
                         aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={entity[columnName]} />;
+                        defaultValue={columnValue} />;
             }
 
             return (

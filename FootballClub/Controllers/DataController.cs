@@ -335,6 +335,35 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Возвращает объект options менеджеров игроков для отображения в select.
+        /// </summary>
+        /// <param name="from">Параметр "От"</param>
+        /// <param name="count">Параметр "Количество"</param>
+        /// <returns>Результат выполнения запроса с объектом options менеджеров игроков.</returns>
+        [HttpGet("GetPlayerManagerOptions")]
+        public IActionResult GetPlayerManagersOptions(int from = 0, int count = 0)
+        {
+            ValidateIntervalParams(from, count);
+
+            var playerManagersOptions =
+                from playerManagersOption in _footballClubDbContext.PlayerManagers.Skip(@from).Take(count).ToList()
+
+                join person in _footballClubDbContext.Persons
+                on playerManagersOption.PersonId equals person.Id
+                into persons
+
+                from playerPerson in persons.DefaultIfEmpty()
+
+                select new
+                {
+                    Id = playerManagersOption.Id,
+                    DisplayValue = playerPerson.Name
+                };
+
+            return Ok(playerManagersOptions);
+        }
+
+        /// <summary>
         /// Возвращает схему объекта на русском языке.
         /// </summary>
         /// <param name="entityName">Название сущности.</param>
