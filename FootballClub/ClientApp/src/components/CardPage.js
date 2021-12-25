@@ -12,8 +12,8 @@ export default function CardPage(props) {
     const entityName = UrlParser.getEntityNameFromUrlForCardPage();
 
     function goToSection() {
-        const newRoute = <Redirect from={`/${entityName}CardPage`} to={`/${entityName}Section`} />;
-        setRedirectToSection(newRoute);
+        const redirectComponent = <Redirect from={`/${entityName}CardPage`} to={`/${entityName}Section`} />;
+        setRedirectToSection(redirectComponent);
     }
 
     return (

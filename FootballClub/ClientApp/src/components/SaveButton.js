@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 import $ from 'jquery';
 
 import * as UrlParser from './UrlParser';

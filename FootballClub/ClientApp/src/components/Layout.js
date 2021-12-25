@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 import Content from './Content';
 import LeftNav from './LeftNav';
 import LowerButtons from './LowerButtons';
@@ -11,7 +11,7 @@ function Layout() {
     WRAPPER_REF = React.createRef();
 
     return (
-        <div ref={WRAPPER_REF} className="wrapper is-nav-open">
+        <div ref={WRAPPER_REF} className="wrapper">
             <div className="p-2 bd-highlight left-nav-fixed" style={{ "width": "10%" }}>
                 <LeftNav />
                 <LowerButtons />

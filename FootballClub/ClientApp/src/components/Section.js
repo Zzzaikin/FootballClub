@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import Card from './Card';
+import $ from 'jquery';
 
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
@@ -9,7 +10,8 @@ class Section extends Component {
         super(props);
 
         this.state = {
-            cards: []
+            cards: [],
+            isNavOpen: ""
         };
 
         SECTION_WRAPPER_REF = React.createRef();
@@ -17,6 +19,12 @@ class Section extends Component {
     }
 
     componentDidMount = () => {
+        const tabContent = $(".wrapper");
+        const isNavOpenState = tabContent[0].className.endsWith("is-nav-open") ? "is-nav-open" : "";
+        this.setState(state => {
+            return { isNavOpen: isNavOpenState };
+        });
+
         this.setCards();
     }
 
@@ -80,9 +88,9 @@ class Section extends Component {
 
     render() {
         return (
-            <div ref={SECTION_WRAPPER_REF} class="sectionWrapper is-nav-open">
+            <div ref={SECTION_WRAPPER_REF} class={`sectionWrapper ${this.state.isNavOpen}`}>
                 {this.props.miniDashboard}
-                <div ref={CARD_CONTAINER_REF} className="cards-container is-nav-open" >
+                <div ref={CARD_CONTAINER_REF} className={`cards-container ${this.state.isNavOpen}`} >
                     {this.state.cards}
                 </div>
             </div>

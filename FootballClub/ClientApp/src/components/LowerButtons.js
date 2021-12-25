@@ -1,9 +1,13 @@
-﻿import React, { useState } from 'react';
-import { WRAPPER_REF } from './Layout'
+﻿import React, { useEffect, useState } from 'react';
+import { WRAPPER_REF } from './Layout';
 import { SECTION_WRAPPER_REF, CARD_CONTAINER_REF } from './Section';
 
 function LowerButtons() {
-    const [turnButtonCaption, setTurnButtonCaption] = useState("<");
+    const [turnButtonCaption, setTurnButtonCaption] = useState(">");
+
+    useEffect(() => {
+        setTimeout(onTurnButtonClick, 500);
+    }, []);
 
     function onTurnButtonClick(e) {
         const caption = turnButtonCaption === ">" ? "<" : ">";
@@ -30,7 +34,7 @@ function LowerButtons() {
                 style={{ "marginRight": "90px" }}>Выход</button>
             <button type="button" className="btn btn-outline-info"
                 style={{ "marginLeft": "50px" }} onClick={onTurnButtonClick}>{turnButtonCaption}</button>
-        </div> 
+        </div>
     );
 }
 
