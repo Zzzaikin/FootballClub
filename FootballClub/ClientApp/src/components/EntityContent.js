@@ -95,7 +95,7 @@ export default function EntityContentOnCardPage(props) {
                         <CustomSelect
                             columnName={dataBaseColumnName}
                             selected={entity[columnName]}
-                            onClick={e => { showSaveButtton() }} />
+                            onClick={showSaveButtton} />
                     </div>
             } else if ((dataBaseColumnName.endsWith("Date")) || (dataBaseColumnName.endsWith("Birthday"))) {
                 if (columnValue) {

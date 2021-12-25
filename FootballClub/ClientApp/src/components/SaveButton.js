@@ -1,15 +1,11 @@
 ﻿import React, { useState } from 'react';
-import Section from './Section';
-import { Redirect } from 'react-router-dom';
 import $ from 'jquery';
 
 import * as UrlParser from './UrlParser';
 import * as SchemaProvider from './Providers/SchemaProvider';
 import * as EntityProvider from './Providers/EntityProvider';
 
-export default function SaveButton() {
-    const [routeToSection, setRouteToSection] = useState([]);
-
+export default function SaveButton(props) {
     async function normalizeSerializedArray(serializedArray, entityName, personId) {
         if (!serializedArray) {
             throw new Error("Serialized array is not defined");
@@ -68,9 +64,9 @@ export default function SaveButton() {
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
 
         let entityForUpdate = await normalizeSerializedArray(entitySerializedInArray, entityName);
-        const personId = entityForUpdate.person.id;
 
-        if (personSerializedInArray) {
+        if (personSerializedInArray.length > 0) {
+            const personId = entityForUpdate.person.id;
             let personForUpdate = await normalizeSerializedArray(personSerializedInArray, "Persons", personId);
             entityForUpdate.person = personForUpdate;
         }
@@ -83,14 +79,10 @@ export default function SaveButton() {
             },
         });
 
-        const newRoute = <Redirect from={`/${entityName}CardPage`} to={`/${entityName}Section`} />;
-        setRouteToSection(newRoute);
+        props.goToSection();
     }
 
     return (
-        <di>
-            <button type="button" class="btn btn-success d-none" onClick={save} id="saveButton">Сохранить</button>
-            {routeToSection}
-        </di>
+        <button type="button" class="btn btn-success d-none" onClick={save} id="saveButton">Сохранить</button>
     );
 }

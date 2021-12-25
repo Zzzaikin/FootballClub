@@ -63,10 +63,9 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
-        /// Обновляет игрока и персону.
+        /// Обновляет игрока.
         /// </summary>
         /// <param name="player">Игрок</param>
-        /// <param name="person">Персона</param>
         /// <returns>Результат выполнения запроса.</returns>
         [HttpPost("UpdatePlayers")]
         public IActionResult UpdatePlayer(Player player)
@@ -74,6 +73,86 @@ namespace FootballClub.Controllers
             ValidateEntity(player);
 
             _footballClubDbContext.Players.Update(player);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Обновляет тренера.
+        /// </summary>
+        /// <param name="coach">тренер</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdateCoaches")]
+        public IActionResult UpdateCoach(Coach coach)
+        {
+            ValidateEntity(coach);
+
+            _footballClubDbContext.Coaches.Update(coach);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Обновляет менеджера игрока.
+        /// </summary>
+        /// <param name="playerManager">Менеджер игрока</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdatePlayerManagers")]
+        public IActionResult UpdatePlayerManager(PlayerManager playerManager)
+        {
+            ValidateEntity(playerManager);
+
+            _footballClubDbContext.PlayerManagers.Update(playerManager);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Обновляет взыскание.
+        /// </summary>
+        /// <param name="employeeRecovery">Взыскание</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdateEmployeeRecoveries")]
+        public IActionResult UpdateEmployeeRecovery(EmployeeRecovery employeeRecovery)
+        {
+            ValidateEntity(employeeRecovery);
+
+            _footballClubDbContext.EmployeeRecoveries.Update(employeeRecovery);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Обновляет матч.
+        /// </summary>
+        /// <param name="match">Матч</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdateMatches")]
+        public IActionResult UpdateMatch(Match match)
+        {
+            ValidateEntity(match);
+
+            _footballClubDbContext.Matches.Update(match);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Обновляет дисквалификацию.
+        /// </summary>
+        /// <param name="disqualification">дисквалификация</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdateDisqualifications")]
+        public IActionResult UpdateDisqualification(Disqualification disqualification)
+        {
+            ValidateEntity(disqualification);
+
+            _footballClubDbContext.Disqualifications.Update(disqualification);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
             return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);

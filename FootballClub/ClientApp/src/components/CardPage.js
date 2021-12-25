@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import SaveButton from './SaveButton';
 
 import * as UrlParser from './UrlParser';
@@ -7,21 +7,27 @@ import * as UrlParser from './UrlParser';
 import '../styles/CardPage.css';
 
 export default function CardPage(props) {
+    const [redirectToSection, setRedirectToSection] = useState();
+
     const entityName = UrlParser.getEntityNameFromUrlForCardPage();
+
+    function goToSection() {
+        const newRoute = <Redirect from={`/${entityName}CardPage`} to={`/${entityName}Section`} />;
+        setRedirectToSection(newRoute);
+    }
 
     return (
         <div className="card-main-container">
             <div className="card-top-container">
                 <div className="buttons-container">
-                    <SaveButton />
-                    <Link type="button" className="btn btn-primary" to={`/${entityName}Section`} id="canselButton" >
-                        Отмена
-                    </Link>
+                    <SaveButton goToSection={goToSection}/>
+                    <button type="button" className="btn btn-primary" id="canselButton" onClick={goToSection}>Отмена</button>
                 </div>
             </div>
             <div className="entity-content">
                 {props.content}
             </div>
+            {redirectToSection}
         </div>
     );
 }
