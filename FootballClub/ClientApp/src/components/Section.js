@@ -38,7 +38,7 @@ class Section extends Component {
                 case "EmployeeRecoveries":
                     dateValue = cardData.date.split("T")[0];
                     firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
-                    secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.name}`}</p>;
+                    secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.displayName}`}</p>;
                     thirdP = <p class="card-text">{`Сумма: ${cardData.sum}`}</p>;
                     date = <p class="card-text card-date">{`Дата: ${dateValue}`}</p>;
                     break;
@@ -52,7 +52,7 @@ class Section extends Component {
                     break;
 
                 case "Disqualifications":
-                    cardHeader = <h5 class="card-title">{`${cardData.person?.name}`}</h5>;
+                    cardHeader = <h5 class="card-title">{`${cardData.person?.displayName}`}</h5>;
                     firstP = <p class="card-text">{`Причина: ${cardData.name}`}</p>;
                     secondP = <p class="card-text">{`Начало: ${cardData.startDate.split("T")[0]}`}</p>;
                     thirdP = <p class="card-text">{`Начало: ${cardData.endDate.split("T")[0]}`}</p>;
