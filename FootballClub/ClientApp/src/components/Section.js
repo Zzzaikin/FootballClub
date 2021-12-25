@@ -52,8 +52,8 @@ class Section extends Component {
                     break;
 
                 case "Disqualifications":
-                    cardHeader = <h5 class="card-title">{`${cardData.person?.displayName}`}</h5>;
-                    firstP = <p class="card-text">{`Причина: ${cardData.name}`}</p>;
+                    cardHeader = <h5 class="card-title">{`${cardData.person?.name}`}</h5>;
+                    firstP = <p class="card-text">{`Причина: ${cardData.displayName}`}</p>;
                     secondP = <p class="card-text">{`Начало: ${cardData.startDate.split("T")[0]}`}</p>;
                     thirdP = <p class="card-text">{`Начало: ${cardData.endDate.split("T")[0]}`}</p>;
                     break;
