@@ -1,7 +1,11 @@
-﻿export async function getSchema(schemaName) {
-    if (!schemaName)
-        throw new Error("Schema name can not be defined");
+﻿export async function getSchema(entityName) {
+    validateEntityName(entityName);
 
-    let response = await fetch(`/Data/GetRuEntitySchema?entityName=${schemaName}`);
+    let response = await fetch(`/Data/GetRuEntitySchema?entityName=${entityName}`);
     return await response.json();
+}
+
+export function validateEntityName(entityName) {
+    if (!entityName)
+        throw new Error("Entity name can not be defined");
 }

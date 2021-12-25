@@ -63,6 +63,23 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Обновляет игрока и персону.
+        /// </summary>
+        /// <param name="player">Игрок</param>
+        /// <param name="person">Персона</param>
+        /// <returns>Результат выполнения запроса.</returns>
+        [HttpPost("UpdatePlayers")]
+        public IActionResult UpdatePlayer(Player player)
+        {
+            ValidateEntity(player);
+
+            _footballClubDbContext.Players.Update(player);
+            var countOfEditRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+        }
+
+        /// <summary>
         /// Возвращает человека по идентификатору.
         /// </summary>
         /// <param name="id">Идентификатор</param>
@@ -563,6 +580,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddPerson")]
         public IActionResult AddPerson(Person person)
         {
+            ValidateEntity(person);
+
             _footballClubDbContext.Persons.Add(person);
             _footballClubDbContext.SaveChanges();
 
@@ -578,6 +597,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddPlayer")]
         public IActionResult AddPlayer(Player player)
         {
+            ValidateEntity(player);
+
             _footballClubDbContext.Players.Add(player);
             _footballClubDbContext.SaveChanges();
 
@@ -592,6 +613,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddCoach")]
         public IActionResult AddCoach(Coach coach)
         {
+            ValidateEntity(coach);
+
             _footballClubDbContext.Coaches.Add(coach);
             _footballClubDbContext.SaveChanges();
 
@@ -606,6 +629,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddContract")]
         public IActionResult AddContract(Contract contract)
         {
+            ValidateEntity(contract);
+
             _footballClubDbContext.Contracts.Add(contract);
             _footballClubDbContext.SaveChanges();
 
@@ -620,6 +645,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddPlayerManager")]
         public IActionResult AddPlayerManager(PlayerManager playerManager)
         {
+            ValidateEntity(playerManager);
+
             _footballClubDbContext.PlayerManagers.Add(playerManager);
             _footballClubDbContext.SaveChanges();
 
@@ -634,6 +661,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddEmployeeRecovery")]
         public IActionResult AddEmployeeRecovery(EmployeeRecovery employeeRecovery)
         {
+            ValidateEntity(employeeRecovery);
+
             _footballClubDbContext.EmployeeRecoveries.Add(employeeRecovery);
             _footballClubDbContext.SaveChanges();
 
@@ -648,6 +677,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddMatch")]
         public IActionResult AddMatch(Match match)
         {
+            ValidateEntity(match);
+
             _footballClubDbContext.Matches.Add(match);
             _footballClubDbContext.SaveChanges();
 
@@ -662,6 +693,8 @@ namespace FootballClub.Controllers
         [HttpPost("AddDisqualification")]
         public IActionResult AddDisqualification(Disqualification disqualification)
         {
+            ValidateEntity(disqualification);
+
             _footballClubDbContext.Disqualifications.Add(disqualification);
             _footballClubDbContext.SaveChanges();
 
@@ -735,6 +768,19 @@ namespace FootballClub.Controllers
             if (count < 0)
             {
                 throw new Exception($"Parametr {nameof(count)} can not be less than zero.");
+            }
+        }
+
+        /// <summary>
+        /// Валидирует сущность на null.
+        /// </summary>
+        /// <param name="entity">Сущность</param>
+        /// <exception cref="ArgumentNullException">Генерируется, если сущность null.</exception>
+        private void ValidateEntity(object entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("Entity can not be null");
             }
         }
     }

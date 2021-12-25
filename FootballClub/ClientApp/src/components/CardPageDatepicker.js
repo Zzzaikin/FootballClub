@@ -10,11 +10,14 @@ export default function CustomDatepicker(props) {
     const [date, settDate] = useState(props.date);
 
     return (
-        <DatePicker className="react-datepicker-ignore-onclickoutside form-control custom-select"
-            locale="ru"
-            dateFormat="dd/MM/yyyy"
-            selected={date}
-            onChange={(date) => settDate(date)}
-        />
+        <div onClick={props.onClick}>
+            <DatePicker className="react-datepicker-ignore-onclickoutside form-control custom-select"
+                locale="ru"
+                dateFormat="dd/MM/yyyy"
+                selected={date}
+                onChange={(date) => settDate(date)}
+                name={props.name}
+            />
+        </div>
     );
 }

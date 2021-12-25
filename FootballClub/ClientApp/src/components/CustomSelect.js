@@ -29,7 +29,7 @@ export default function CustomSelect(props) {
 
         const mappedOptions = options.map((option) => {
             return (
-                <option defaultValue={option.id}>{option.displayValue}</option>
+                <option value={option.id}>{option.displayValue}</option>
             );
         });
 
@@ -46,7 +46,7 @@ export default function CustomSelect(props) {
 
     return (
         <div type="text" className="input-group-prepend custom-input-group-prepend">
-            <select className="custom-select" id="inputGroupSelect01" name={props.columnName}>
+            <select className="custom-select" id="inputGroupSelect01" name={props.columnName} onClick={props.onClick}>
                 <option value="">Выберите значение...</option>
                 {options}
             </select>

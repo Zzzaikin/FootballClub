@@ -4,6 +4,7 @@ import Input from './Input/Input';
 import InputsCard from './Input/InputsCard';
 import CustomSelect from './CustomSelect';
 import CardPageDatepicker from './CardPageDatepicker';
+import $ from 'jquery';
 
 import * as SchemaProvider from './Providers/SchemaProvider';
 import * as EntityProvider from './Providers/EntityProvider';
@@ -86,28 +87,33 @@ export default function EntityContentOnCardPage(props) {
                         className="form-control"
                         aria-describedby="inputGroup-sizing-sm"
                         defaultValue={entity[columnName]}
-                        name={dataBaseColumnName} />;
+                        name={dataBaseColumnName}
+                        onClick={e => { showSaveButtton() }} />;
             } else if (dataBaseColumnName.endsWith("Id")) {
                 inputComponent =
                     <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
-                        <CustomSelect columnName={dataBaseColumnName} selected={entity[columnName]} />
+                        <CustomSelect
+                            columnName={dataBaseColumnName}
+                            selected={entity[columnName]}
+                            onClick={e => { showSaveButtton() }} />
                     </div>
             } else if ((dataBaseColumnName.endsWith("Date")) || (dataBaseColumnName.endsWith("Birthday"))) {
                 if (columnValue) {
                     const indexOfT = columnValue.indexOf('T');
-                    const date = columnValue.substr("T", indexOfT).slice('-');
+                    const date = columnValue.substr("T", indexOfT).split('-');
 
                     inputComponent =
-                        <CardPageDatepicker date={new Date(date[0], date[1], date[2])} />
+                        <CardPageDatepicker name={dataBaseColumnName} date={new Date(date[0], date[1], date[2])} onClick={e => { showSaveButtton() }} />
                 } else {
                     inputComponent =
-                        <CardPageDatepicker />
+                        <CardPageDatepicker name={dataBaseColumnName} onClick={e => { showSaveButtton() }} />
                 }
             } else {
                 inputComponent =
                     <input type="text" className="form-control" name={dataBaseColumnName}
                         aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={columnValue} />;
+                        defaultValue={columnValue}
+                        onClick={e => { showSaveButtton() }} />;
             }
 
             return (
@@ -120,6 +126,11 @@ export default function EntityContentOnCardPage(props) {
         });
 
         return mappedInputs;
+    }
+
+    function showSaveButtton() {
+        $('#saveButton').removeClass('d-none');
+        $('#canselButton').addClass('cancel-button');
     }
 
     function getPersonInfoCard(mappedPersonInputs) {
@@ -142,12 +153,16 @@ export default function EntityContentOnCardPage(props) {
     }
 
     return (
-        <form className="inputs-container">
-            {personInfo}
-            <InputsCard
-                header={"Основная информация"}
-                inputs={entityInputs}
-            />
-        </form>
+        <div className="inputs-container">
+            <form id="person-info-form">
+                {personInfo}
+            </form>
+            <form id="entity-info-form">
+                <InputsCard
+                    header={"Основная информация"}
+                    inputs={entityInputs}
+                />
+            </form>
+        </div>
     );
 }
