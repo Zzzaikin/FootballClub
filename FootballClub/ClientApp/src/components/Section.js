@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
@@ -8,35 +8,27 @@ import '../styles/Section.css';
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
 
-class Section extends Component {
-    constructor(props) {
-        super(props);
+export default function Section(props) {
+    const [cards, setCards] = useState([]);
+    const [isNavOpen, setIsNavOpen] = useState("");
 
-        this.state = {
-            cards: [],
-            isNavOpen: ""
-        };
-
+    useEffect(() => {
         SECTION_WRAPPER_REF = React.createRef();
         CARD_CONTAINER_REF = React.createRef();
-    }
 
-    componentDidMount = () => {
         const tabContent = $(".wrapper");
         const isNavOpenState = tabContent[0].className.endsWith("is-nav-open") ? "is-nav-open" : "";
-        this.setState(state => {
-            return { isNavOpen: isNavOpenState };
-        });
+        setIsNavOpen(isNavOpenState);
 
-        this.setCards();
+        setEntityCards();
+    }, []);
+
+    function getEntityName() {
+        return props.match.path.slice(1).split("S")[0];
     }
 
-    getEntityName() {
-        return this.props.match.path.slice(1).split("S")[0];
-    }
-
-    async setCards(entityName) {
-        const name = entityName || this.getEntityName();
+    async function setEntityCards(entityName) {
+        const name = entityName || getEntityName();
 
         let response = await fetch(`Data/Get${name}`);
         let result = await response.json();
@@ -84,28 +76,23 @@ class Section extends Component {
                 <Card header={cardHeader} firstParagraph={firstP}
                     secondParagraph={secondP} thirdParagraph={thirdP}
                     dateParagraph={date} entityId={cardData.id}
-                    entityName={name} setCardsInSection={this.setCards.bind(this)} />
+                    entityName={name} setCardsInSection={setEntityCards} />
             );
         });
 
-        this.setState(state => {
-            return { cards: cardsMarkup };
-        });
+        setCards(cardsMarkup);
     }
 
-    render() {
-        return (
-            <div ref={SECTION_WRAPPER_REF} class={`sectionWrapper ${this.state.isNavOpen}`}>
-                {this.props.miniDashboard}
-                <div ref={CARD_CONTAINER_REF} className={`cards-container ${this.state.isNavOpen}`} >
-                    <div className="top-container" >
-                        <Link type="button" class="btn btn-link add-button" to={`Insert${this.getEntityName()}`}>Добавить запись...</Link>
-                    </div>
-                    {this.state.cards}
+    return (
+        <div ref={SECTION_WRAPPER_REF} class={`sectionWrapper ${isNavOpen}`}>
+            {props.miniDashboard}
+            <div ref={CARD_CONTAINER_REF} className={`cards-container ${isNavOpen}`} >
+                <div className="top-container" >
+                    <Link type="button" class="btn btn-link add-button" to={`Insert${getEntityName()}`}>Добавить запись...</Link>
                 </div>
+                {cards}
+                <Link type="button" class="btn btn-link show-more-button">Показать ещё...</Link>
             </div>
-        );
-    };
-}
-
-export default Section;
+        </div>
+    );
+};
