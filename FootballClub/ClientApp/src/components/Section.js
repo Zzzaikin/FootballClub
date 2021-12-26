@@ -99,7 +99,7 @@ class Section extends Component {
                 {this.props.miniDashboard}
                 <div ref={CARD_CONTAINER_REF} className={`cards-container ${this.state.isNavOpen}`} >
                     <div className="top-container" >
-                        <Link type="button" class="btn btn-link add-button" to={`Insert${this.getEntityName()}`}>Добавить...</Link>
+                        <Link type="button" class="btn btn-link add-button" to={`Insert${this.getEntityName()}`}>Добавить запись...</Link>
                     </div>
                     {this.state.cards}
                 </div>
