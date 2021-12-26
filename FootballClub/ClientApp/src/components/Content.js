@@ -23,7 +23,14 @@ function Content() {
             <Route path='/PlayerManagersCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
             <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false}/>} />} />
             <Route path='/MatchesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
-            <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false}/>} />} />
+            <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false} />} />} />
+
+            <Route path='/InsertPlayers' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />
+            <Route path='/InsertCoaches' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />
+            <Route path='/InsertPlayerManagers' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />
+            <Route path='/InsertEmployeeRecoveries' render={() => <CardPage content={<EntityContent skipPersonId={false} insertingMode={true} />} />} />
+            <Route path='/InsertMatches' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />
+            <Route path='/InsertDisqualifications' render={() => <CardPage content={<EntityContent skipPersonId={false} insertingMode={true} />} />} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );

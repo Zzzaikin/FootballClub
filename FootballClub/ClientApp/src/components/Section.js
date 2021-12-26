@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import Card from './Card';
 import $ from 'jquery';
+import { Link } from 'react-router-dom';
 
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
@@ -28,8 +29,12 @@ class Section extends Component {
         this.setCards();
     }
 
+    getEntityName() {
+        return this.props.match.path.slice(1).split("S")[0];
+    }
+
     async setCards(entityName) {
-        const name = entityName || this.props.match.path.slice(1).split("S")[0];
+        const name = entityName || this.getEntityName();
 
         let response = await fetch(`Data/Get${name}`);
         let result = await response.json();
@@ -91,6 +96,9 @@ class Section extends Component {
             <div ref={SECTION_WRAPPER_REF} class={`sectionWrapper ${this.state.isNavOpen}`}>
                 {this.props.miniDashboard}
                 <div ref={CARD_CONTAINER_REF} className={`cards-container ${this.state.isNavOpen}`} >
+                    <div className="top-container" >
+                        <Link type="button" class="btn btn-link add-button" to={`Insert${this.getEntityName()}`}>Добавить...</Link>
+                    </div>
                     {this.state.cards}
                 </div>
             </div>
@@ -98,4 +106,4 @@ class Section extends Component {
     };
 }
 
-export default Section; 
+export default Section;

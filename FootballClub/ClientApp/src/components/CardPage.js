@@ -12,7 +12,7 @@ export default function CardPage(props) {
     const entityName = UrlParser.getEntityNameFromUrlForCardPage();
 
     function goToSection() {
-        const redirectComponent = <Redirect from={`/${entityName}CardPage`} to={`/${entityName}Section`} />;
+        const redirectComponent = <Redirect from={`/`} to={`/${entityName}Section`} />;
         setRedirectToSection(redirectComponent);
     }
 
@@ -20,7 +20,7 @@ export default function CardPage(props) {
         <div className="card-main-container">
             <div className="card-top-container">
                 <div className="buttons-container">
-                    <SaveButton goToSection={goToSection}/>
+                    <SaveButton goToSection={goToSection} insertingMode={props.content.props.insertingMode}/>
                     <button type="button" className="btn btn-primary" id="canselButton" onClick={goToSection}>Отмена</button>
                 </div>
             </div>

@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace FootballClub.Controllers
@@ -63,6 +61,172 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Возвращает пустой объект персоны.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом персноны.</returns>
+        [HttpGet("GetEmptyPersons")]
+        public IActionResult GetEmptyPerson()
+        {
+            return Ok(new Person());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект игрока.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом игрока.</returns>
+        [HttpGet("GetEmptyPlayers")]
+        public IActionResult GetEmptyPlayer()
+        {
+            return Ok(new Player());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект тренера.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом тренера.</returns>
+        [HttpGet("GetEmptyCoaches")]
+        public IActionResult GetEmptyCoach()
+        {
+            return Ok(new Coach());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект менеджера игрока.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом менеджера игрока.</returns>
+        [HttpGet("GetEmptyPlayerManagers")]
+        public IActionResult GetEmptyPlayerManager()
+        {
+            return Ok(new PlayerManager());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект взыскания игрока.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом взыскания игрока.</returns>
+        [HttpGet("GetEmptyEmployeeRecoveries")]
+        public IActionResult GetEmptyEmployeeRecovery()
+        {
+            return Ok(new EmployeeRecovery());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект матча.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом матча.</returns>
+        [HttpGet("GetEmptyMatches")]
+        public IActionResult GetEmptyMatch()
+        {
+            return Ok(new Match());
+        }
+
+        /// <summary>
+        /// Возвращает пустой объект дисквалификации.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с пустым объектом дисквалификации.</returns>
+        [HttpGet("GetEmptyDisqualifications")]
+        public IActionResult GetEmptyDisqualification()
+        {
+            return Ok(new Disqualification());
+        }
+
+        /// <summary>
+        /// Добавляет игрока.
+        /// </summary>
+        /// <param name="player">Добавляемый игрок</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertPlayers")]
+        public IActionResult InsertPlayer(Player player)
+        {
+            ValidateEntity(player);
+
+            _footballClubDbContext.Players.Add(player);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Добавляет тренера.
+        /// </summary>
+        /// <param name="coach">Добавляемый тренер</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertCoaches")]
+        public IActionResult InsertCoach(Coach coach)
+        {
+            ValidateEntity(coach);
+
+            _footballClubDbContext.Coaches.Add(coach);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Добавляет менеджера игрока.
+        /// </summary>
+        /// <param name="playerManager">Добавляемый менеджер игрока</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertPlayerManagers")]
+        public IActionResult InsertPlayerManager(PlayerManager playerManager)
+        {
+            ValidateEntity(playerManager);
+
+            _footballClubDbContext.PlayerManagers.Add(playerManager);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Добавляет взыскание игрока.
+        /// </summary>
+        /// <param name="employeeRecovery">Добавляемое взыскание игрока</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertEmployeeRecoveries")]
+        public IActionResult InsertEmployeeRecovery(EmployeeRecovery employeeRecovery)
+        {
+            ValidateEntity(employeeRecovery);
+
+            _footballClubDbContext.EmployeeRecoveries.Add(employeeRecovery);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Добавляет матч.
+        /// </summary>
+        /// <param name="match">Добавляемый матч</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertMatches")]
+        public IActionResult InsertMatch(Match match)
+        {
+            ValidateEntity(match);
+
+            _footballClubDbContext.Matches.Add(match);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Добавляет дисквалификацию.
+        /// </summary>
+        /// <param name="disqualification">Добавляемая дисквалификация</param>
+        /// <returns>Статус выполнения запроса.</returns>
+        [HttpPost("InsertDisqualifications")]
+        public IActionResult InsertDisqualification(Disqualification disqualification)
+        {
+            ValidateEntity(disqualification);
+
+            _footballClubDbContext.Disqualifications.Add(disqualification);
+            var countOfAddedRecords = _footballClubDbContext.SaveChanges();
+
+            return countOfAddedRecords > 0 ? Ok() : Problem(title: "No records has been added.", statusCode: 500);
+        }
+
+        /// <summary>
         /// Обновляет игрока.
         /// </summary>
         /// <param name="player">Игрок</param>
@@ -75,7 +239,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.Players.Update(player);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -91,7 +255,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.Coaches.Update(coach);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -107,7 +271,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.PlayerManagers.Update(playerManager);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -123,7 +287,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.EmployeeRecoveries.Update(employeeRecovery);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -139,7 +303,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.Matches.Update(match);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -155,7 +319,7 @@ namespace FootballClub.Controllers
             _footballClubDbContext.Disqualifications.Update(disqualification);
             var countOfEditRecords = _footballClubDbContext.SaveChanges();
 
-            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated", statusCode: 500);
+            return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
         }
 
         /// <summary>
@@ -484,7 +648,26 @@ namespace FootballClub.Controllers
                     DataBaseColumnName = schema.ColumnName
                 };
 
-            return Ok(schemas.ToList());
+            return Ok(schemas);
+        }
+
+        /// <summary>
+        /// Возвращает персон на указанном интервале.
+        /// </summary>
+        /// <param name="from">Параметр выборки "От"</param>
+        /// <param name="count">Параметр определяющий количество получемых записей</param>
+        /// <returns>Персон со статусом запроса.</returns>
+        [HttpGet("GetPersons")]
+        public IActionResult GetPersons(int from = 0, int count = 9)
+        {
+            ValidateIntervalParams(@from, count);
+
+            var persons =
+                from person in _footballClubDbContext.Persons.Skip(@from).Take(count)
+
+                select person;
+
+            return Ok(persons);
         }
 
         /// <summary>
@@ -492,7 +675,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Игроков со статусом запроса</returns>
+        /// <returns>Игроков со статусом запроса.</returns>
         [HttpGet("GetPlayers")]
         public IActionResult GetPlayers(int from = 0, int count = 9)
         {
@@ -517,7 +700,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Тренеров со статусом запроса</returns>
+        /// <returns>Тренеров со статусом запроса.</returns>
         [HttpGet("GetCoaches")]
         public IActionResult GetCoaches(int from = 0, int count = 9)
         {
@@ -542,7 +725,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Матчи со статусом запроса</returns>
+        /// <returns>Матчи со статусом запроса.</returns>
         [HttpGet("GetMatches")]
         public IActionResult GetMatches(int from = 0, int count = 9)
         {
@@ -567,7 +750,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Дисквалификации со статусом запроса</returns>
+        /// <returns>Дисквалификации со статусом запроса.</returns>
         [HttpGet("GetDisqualifications")]
         public IActionResult GetDisqualifications(int from = 0, int count = 9)
         {
@@ -590,7 +773,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Менеджеров игроков со статусом запроса</returns>
+        /// <returns>Менеджеров игроков со статусом запроса.</returns>
         [HttpGet("GetPlayerManagers")]
         public IActionResult GetPlayerManagers(int from = 0, int count = 9)
         {
@@ -615,7 +798,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
-        /// <returns>Взыскания с игроков со статусом запроса</returns>
+        /// <returns>Взыскания с игроков со статусом запроса.</returns>
         [HttpGet("GetEmployeeRecoveries")]
         public IActionResult GetEmployeeRecoveries(int from = 0, int count = 9)
         {

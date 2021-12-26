@@ -13,20 +13,20 @@ export default function SaveButton(props) {
 
         SchemaProvider.validateEntityName(entityName);
 
-        if ((entityName === "Persons") && (!personId)) {
-            throw new Error("Entity name as Persons is defined, but person identifier is not defined");
-        }
-
         let entitySchema = await SchemaProvider.getSchema(entityName);
-
         let entityId;
+        let entity;
 
         if (entityName === "Persons")
             entityId = personId;
         else
             entityId = UrlParser.getEntityIdFromUrlForCardPage();
 
-        let entity = await EntityProvider.getEntity(entityName, entityId);
+
+        if (props.insertingMode)
+            entity = await EntityProvider.getEmptyEntity(entityName);
+        else
+            entity = await EntityProvider.getEntity(entityName, entityId);
 
         await entitySchema.forEach(column => {
             const dataBaseColumnName = column.dataBaseColumnName;
@@ -63,17 +63,24 @@ export default function SaveButton(props) {
 
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
 
-        let entityForUpdate = await normalizeSerializedArray(entitySerializedInArray, entityName);
+        let entity = await normalizeSerializedArray(entitySerializedInArray, entityName);
 
         if (personSerializedInArray.length > 0) {
-            const personId = entityForUpdate.person.id;
-            let personForUpdate = await normalizeSerializedArray(personSerializedInArray, "Persons", personId);
-            entityForUpdate.person = personForUpdate;
+            let personId;
+
+            if (!props.insertingMode) {
+                personId = entity.person.id;
+            }
+
+            let person = await normalizeSerializedArray(personSerializedInArray, "Persons", personId);
+            entity.person = person;
         }
 
-        await fetch(`/Data/Update${entityName}`, {
+        const action = props.insertingMode ? "Insert" : "Update";
+
+        await fetch(`/Data/${action}${entityName}`, {
             method: 'POST',
-            body: JSON.stringify(entityForUpdate),
+            body: JSON.stringify(entity),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -83,6 +90,6 @@ export default function SaveButton(props) {
     }
 
     return (
-        <button type="button" class="btn btn-success d-none" onClick={save} id="saveButton">Сохранить</button>
+        <button type="button" class="btn btn-success d-none" onClick={save} id="saveButton">{props.insertingMode ? "Добавить" : "Сохранить"}</button>
     );
 }

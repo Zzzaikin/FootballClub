@@ -4,6 +4,13 @@ export async function getEntity(entityName, entityId) {
     return await getEntityFromDatabase(entityName, entityId);
 }
 
+export async function getEmptyEntity(entityName) {
+    validateEntityName(entityName);
+
+    let response = await fetch(`Data/GetEmpty${entityName}`);
+    return await response.json();
+}
+
 async function getEntityFromDatabase(entityName, entityId) {
     validateEntityNameAndId(entityName, entityId);
 
@@ -12,9 +19,13 @@ async function getEntityFromDatabase(entityName, entityId) {
 }
 
 function validateEntityNameAndId(entityName, entityId) {
-    if (!entityName)
-        throw new Error("Entity name can not be defined");
+    validateEntityName(entityName);
 
     if (!entityId)
         throw new Error("Entity identifier can not be defined");
+}
+
+function validateEntityName(entityName) {
+    if (!entityName)
+        throw new Error("Entity name can not be defined");
 }

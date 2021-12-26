@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useReducer, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import InputMask from 'react-input-mask';
 import Input from './Input/Input';
 import InputsCard from './Input/InputsCard';
@@ -37,21 +37,29 @@ export default function EntityContentOnCardPage(props) {
     async function setEntityInputsBySchema(entitySchema) {
         validateSchema(entitySchema);
 
-        const entity = await getEntity();
-        const personId = entity?.personId;
+        let entity;
         let person;
 
-        if (personId) {
-            if ((entity.whetherToLoadPerson)) {
-                let response = await fetch(`/Data/GetPersonsById?id=${personId}`);
-                person = await response.json();
+        if (!props.insertingMode) {
+            entity = await getEntity();
+            const personId = entity?.personId;
+
+            if (personId) {
+                if ((entity.whetherToLoadPerson)) {
+                    let response = await fetch(`/Data/GetPersonsById?id=${personId}`);
+                    person = await response.json();
+                }
             }
         }
 
         let mappedEntityInputs = getMappedInputsBySchema(entitySchema, entity);
         setEntityInputs(mappedEntityInputs);
 
-        if (person) {
+        const entityName = UrlParser.getEntityNameFromUrlForCardPage();
+
+        const whetherPersonInfo = (entityName === "Players") || (entityName === "Coaches") || (entityName === "PlayerManagers");
+
+        if (whetherPersonInfo) {
             let personSchema = await getPersonSchema();
             let mappedPersonInputs = getMappedInputsBySchema(personSchema, person);
 
@@ -63,9 +71,6 @@ export default function EntityContentOnCardPage(props) {
     function getMappedInputsBySchema(schema, entity) {
         validateSchema(schema);
 
-        if (!entity) {
-            throw new Error("Entity is not defined");
-        }
         let mappedInputs = schema.map(column => {
 
             const dataBaseColumnName = column.dataBaseColumnName;
@@ -76,7 +81,7 @@ export default function EntityContentOnCardPage(props) {
                 return;
 
             const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
-            const columnValue = entity[columnName];
+            const columnValue = entity ? entity[columnName] : "";
             let inputComponent;
 
             if (dataBaseColumnName.includes("Phone")) {
@@ -86,7 +91,7 @@ export default function EntityContentOnCardPage(props) {
                         maskChar=" " type="text"
                         className="form-control"
                         aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={entity[columnName]}
+                        defaultValue={columnValue}
                         name={dataBaseColumnName}
                         onClick={e => { showSaveButtton() }} />;
             } else if (dataBaseColumnName.endsWith("Id")) {
@@ -94,7 +99,7 @@ export default function EntityContentOnCardPage(props) {
                     <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
                         <CustomSelect
                             columnName={dataBaseColumnName}
-                            selected={entity[columnName]}
+                            selected={columnValue}
                             onClick={showSaveButtton} />
                     </div>
             } else if ((dataBaseColumnName.endsWith("Date")) || (dataBaseColumnName.endsWith("Birthday"))) {
