@@ -3,6 +3,8 @@ import Card from './Card';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
 
+import '../styles/Section.css';
+
 export let SECTION_WRAPPER_REF;
 export let CARD_CONTAINER_REF;
 

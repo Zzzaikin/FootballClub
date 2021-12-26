@@ -22,6 +22,8 @@ namespace FootballClub.Models
 
         public int EnemyTeamScores { get; set; }
 
+        public bool IsViziting { get; set; }
+
         public bool WithFirstOvertime { get; set; }
 
         public bool WithSecondOvertime { get; set; }

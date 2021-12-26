@@ -645,7 +645,8 @@ namespace FootballClub.Controllers
                 {
                     TableName = schema.TableName,
                     LocalizedColumnName = _localizer[schema.ColumnName].Value,
-                    DataBaseColumnName = schema.ColumnName
+                    DataBaseColumnName = schema.ColumnName,
+                    DataType = schema.DataType
                 };
 
             return Ok(schemas);

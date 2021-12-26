@@ -31,23 +31,28 @@ export default function SaveButton(props) {
         await entitySchema.forEach(column => {
             const dataBaseColumnName = column.dataBaseColumnName;
             const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
+            const columnDataType = column.dataType;
 
             const columnInSerializedArray = serializedArray.find(item => item.name === dataBaseColumnName);
 
             if (columnInSerializedArray) {
-                const columnNameInSerializedArray = columnInSerializedArray.name;
                 let columnValueInSerializedArray = columnInSerializedArray.value;
 
                 if (!columnValueInSerializedArray) {
                     columnValueInSerializedArray = null;
                 }
 
-                const isDate = (columnValueInSerializedArray !== null)
-                    && ((columnNameInSerializedArray.endsWith("Date")) || (columnNameInSerializedArray === "Birthday"));
+                const isDate = (columnValueInSerializedArray !== null) && (columnDataType === "datetime");
 
                 if (isDate) {
                     const splittedValue = columnValueInSerializedArray.split('/');
                     columnValueInSerializedArray = `${splittedValue[2]}-${splittedValue[1]}-${splittedValue[0]}`;
+                }
+
+                const isBoolean = (columnValueInSerializedArray !== null) && (columnDataType === "tinyint");
+
+                if (isBoolean) {
+                    columnValueInSerializedArray = columnValueInSerializedArray === "Да" ? true : false;
                 }
 
                 entity[`${columnName}`] = columnValueInSerializedArray;

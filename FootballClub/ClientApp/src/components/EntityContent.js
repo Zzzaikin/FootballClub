@@ -74,6 +74,7 @@ export default function EntityContentOnCardPage(props) {
         let mappedInputs = schema.map(column => {
 
             const dataBaseColumnName = column.dataBaseColumnName;
+            const dataBaseDataType = column.dataType;
 
             const skip = (dataBaseColumnName === "Id") || ((dataBaseColumnName === "PersonId") && (props.skipPersonId));
 
@@ -102,7 +103,7 @@ export default function EntityContentOnCardPage(props) {
                             selected={columnValue}
                             onClick={showSaveButtton} />
                     </div>
-            } else if ((dataBaseColumnName.endsWith("Date")) || (dataBaseColumnName.endsWith("Birthday"))) {
+            } else if (dataBaseDataType === "datetime") {
                 if (columnValue) {
                     const indexOfT = columnValue.indexOf('T');
                     const date = columnValue.substr("T", indexOfT).split('-');
@@ -111,14 +112,37 @@ export default function EntityContentOnCardPage(props) {
                         <CardPageDatepicker name={dataBaseColumnName} date={new Date(date[0], date[1], date[2])} onClick={e => { showSaveButtton() }} />
                 } else {
                     inputComponent =
-                        <CardPageDatepicker name={dataBaseColumnName} onClick={e => { showSaveButtton() }} />
+                        <CardPageDatepicker name={dataBaseColumnName} onClick={showSaveButtton} />
                 }
+            } else if (dataBaseDataType === "tinyint") {
+                let options;
+
+                if (columnValue) {
+                    options =
+                        <>
+                            <option selected defaultValue={columnValue}>Да</option>
+                            <option defaultValue={columnValue}>Нет</option>
+                        </>
+                } else {
+                    options =
+                        <>
+                            <option defaultValue={columnValue}>Да</option>
+                            <option selected defaultValue={columnValue}>Нет</option>
+                        </>
+                }
+
+                inputComponent =
+                    <div type="text" className="input-group-prepend custom-input-group-prepend">
+                        <select className="custom-select" name={dataBaseColumnName} onClick={showSaveButtton}>
+                            {options}
+                        </select>
+                    </div>
             } else {
                 inputComponent =
                     <input type="text" className="form-control" name={dataBaseColumnName}
                         aria-describedby="inputGroup-sizing-sm"
                         defaultValue={columnValue}
-                        onClick={e => { showSaveButtton() }} />;
+                        onClick={showSaveButtton} />;
             }
 
             return (

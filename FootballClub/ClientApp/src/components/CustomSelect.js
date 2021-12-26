@@ -46,7 +46,7 @@ export default function CustomSelect(props) {
 
     return (
         <div type="text" className="input-group-prepend custom-input-group-prepend">
-            <select className="custom-select" id="inputGroupSelect01" name={props.columnName} onClick={props.onClick}>
+            <select className="custom-select" name={props.columnName} onClick={props.onClick}>
                 <option value="">Выберите значение...</option>
                 {options}
             </select>

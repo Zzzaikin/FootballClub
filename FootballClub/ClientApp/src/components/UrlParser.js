@@ -1,12 +1,12 @@
 ﻿export function getEntityNameFromUrlForCardPage() {
     const pathname = window.location.pathname;
     const cardPage = "CardPage";
-    const insert = "/Insert";
+    const insert = "Insert";
 
-    if (pathname.endsWith(cardPage))
+    if (pathname.includes(cardPage))
         return pathname.replace(cardPage, "").replace("/", "");
 
-    if (pathname.startsWith(insert))
+    if (pathname.includes(insert))
         return pathname.replace(insert, "").replace("/", "");
 }
 
