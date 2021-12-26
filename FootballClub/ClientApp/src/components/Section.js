@@ -11,6 +11,11 @@ export let CARD_CONTAINER_REF;
 export default function Section(props) {
     const [cards, setCards] = useState([]);
     const [isNavOpen, setIsNavOpen] = useState("");
+    const [showMoreButton, setShowMoreButton] = useState();
+
+    const from = 0;
+    const countIncrement = 9;
+    let count = 9;
 
     useEffect(() => {
         SECTION_WRAPPER_REF = React.createRef();
@@ -21,16 +26,40 @@ export default function Section(props) {
         setIsNavOpen(isNavOpenState);
 
         setEntityCards();
+        setShowMoreButtonVisible();
     }, []);
 
     function getEntityName() {
         return props.match.path.slice(1).split("S")[0];
     }
 
+    async function setShowMoreButtonVisible() {
+        const entityName = getEntityName();
+
+        let response = await fetch(`Data/GetCountOf${entityName}`);
+        let countOfRecords = await response.json();
+
+        if ((countOfRecords - count) > 0) {
+            const showMore =
+                <li type="button" class="btn btn-link show-more-button" onClick={setMoreEntityCards}>Показать ещё...</li>;
+
+            setShowMoreButton(showMore);
+        } else {
+            setShowMoreButton();
+        }
+    }
+
+    function setMoreEntityCards() {
+        count += countIncrement;
+        setEntityCards();
+
+        setShowMoreButtonVisible();
+    }
+
     async function setEntityCards(entityName) {
         const name = entityName || getEntityName();
 
-        let response = await fetch(`Data/Get${name}`);
+        let response = await fetch(`Data/Get${name}?from=${from}&count=${count}`);
         let result = await response.json();
 
         let cardsMarkup = result?.map(cardData => {
@@ -80,6 +109,7 @@ export default function Section(props) {
             );
         });
 
+        setShowMoreButtonVisible();
         setCards(cardsMarkup);
     }
 
@@ -91,7 +121,7 @@ export default function Section(props) {
                     <Link type="button" class="btn btn-link add-button" to={`Insert${getEntityName()}`}>Добавить запись...</Link>
                 </div>
                 {cards}
-                <Link type="button" class="btn btn-link show-more-button">Показать ещё...</Link>
+                {showMoreButton}
             </div>
         </div>
     );

@@ -61,6 +61,72 @@ namespace FootballClub.Controllers
         }
 
         /// <summary>
+        /// Возвращает количество записей игроков.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей игроков.</returns>
+        [HttpGet("GetCountOfPlayers")]
+        public IActionResult GetCountOfPlayers()
+        {
+            var count = _footballClubDbContext.Players.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
+        /// Возвращает количество записей тренеров.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей тренеров.</returns>
+        [HttpGet("GetCountOfCoaches")]
+        public IActionResult GetCountOfCoaches()
+        {
+            var count = _footballClubDbContext.Coaches.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
+        /// Возвращает количество записей менеджеров игроков.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей менеджеров игроков.</returns>
+        [HttpGet("GetCountOfPlayerManagers")]
+        public IActionResult GetCountOfPlayerManagers()
+        {
+            var count = _footballClubDbContext.PlayerManagers.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
+        /// Возвращает количество записей взысканий.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей взысканий.</returns>
+        [HttpGet("GetCountOfEmployeeRecoveries")]
+        public IActionResult GetCountOfEmployeeRecoveries()
+        {
+            var count = _footballClubDbContext.EmployeeRecoveries.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
+        /// Возвращает количество записей матчей.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей матчей.</returns>
+        [HttpGet("GetCountOfMatches")]
+        public IActionResult GetCountOfMatches()
+        {
+            var count = _footballClubDbContext.Matches.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
+        /// Возвращает количество записей дисквалификаций.
+        /// </summary>
+        /// <returns>Статус выполнения запроса с количеством записей дисквалификаций.</returns>
+        [HttpGet("GetCountOfDisqualifications")]
+        public IActionResult GetCountOfDisqualifications()
+        {
+            var count = _footballClubDbContext.Disqualifications.Count();
+            return Ok(count);
+        }
+
+        /// <summary>
         /// Возвращает пустой объект персоны.
         /// </summary>
         /// <returns>Статус выполнения запроса с пустым объектом персноны.</returns>
