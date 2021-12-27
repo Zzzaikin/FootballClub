@@ -2,9 +2,9 @@
 
 Ссылка на демо - https://youtu.be/5oy4lomcYYo
 
-1) Установите MySql Server
+1) Установите MySql Server;
 2) Импортируйте дамп базы данных, который находится по ссылке - https://disk.yandex.ru/d/dSDxe1t36qyzng;
-3) В appsettings.json укажите строку подключения к базе данных FootballClub, а также к information_schema;
+3) В appsettings.json укажите строку подключения к базе данных FootballClub ("FootballClub": значение), а также к information_schema ("InformationSchema": значение);
 4) Соберите проект в Visual Studio.
 
 Второй пункт выполнять необязательно, так как взаимодействие с базой данных основано на EF Core, который создаст базу данных, если он её не найдёт. 
