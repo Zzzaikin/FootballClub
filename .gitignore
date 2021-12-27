@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/FootballClub/Filter.cs
+/FootballClub/LogicalOperation.cs
+/FootballClub/Controllers/IEntityController.cs

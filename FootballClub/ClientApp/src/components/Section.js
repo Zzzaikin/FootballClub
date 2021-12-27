@@ -63,7 +63,8 @@ export default function Section(props) {
         let result = await response.json();
 
         let cardsMarkup = result?.map(cardData => {
-            let cardHeader = <h5 class="card-title">{cardData.person?.name}</h5>;
+            const cardHeaderValue = cardData.person?.name || "Сотрудник не выбран";
+            let cardHeader = <h5 class="card-title">{cardHeaderValue}</h5>;
             let firstP;
             let secondP;
             let thirdP;
@@ -73,31 +74,39 @@ export default function Section(props) {
             switch (name) {
                 case "EmployeeRecoveries":
                     dateValue = cardData.date.split("T")[0];
-                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
-                    secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.displayName}`}</p>;
-                    thirdP = <p class="card-text">{`Сумма: ${cardData.sum}`}</p>;
-                    date = <p class="card-text card-date">{`Дата: ${dateValue}`}</p>;
+                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber || "Не указан"}`}</p>;
+                    secondP = <p class="card-text">{`Причина взыскания: ${cardData.recoveryReason?.displayName || "Не указан"}`}</p>;
+                    thirdP = <p class="card-text">{`Сумма: ${cardData.sum || "Не указана"}`}</p>;
+                    date = <p class="card-text card-date">{`Дата: ${dateValue || "Не указана"}`}</p>;
                     break;
 
                 case "Matches":
                     dateValue = cardData.date.split("T")[0];
-                    cardHeader = <h5 class="card-title">{`${cardData.ourTeamName} - ${cardData.enemyTeamName}`}</h5>;
-                    firstP = <p class="card-text">{`Счёт: ${cardData.ourTeamScores} - ${cardData.enemyTeamScores}`}</p>;
-                    secondP = <p class="card-text">{`Длительность: ${cardData.duration}`}</p>;
-                    date = <p class="card-text card-date">{`Дата: ${dateValue}`}</p>;
+                    cardHeader =
+                        <h5 class="card-title">
+                            {`${cardData.ourTeamName || "Наша команда не указана"} - ${cardData.enemyTeamName || "Команда противника не указана"}`}
+                        </h5>;
+
+                    firstP =
+                        <p class="card-text">
+                            {`Счёт: ${cardData.ourTeamScores || "Голы нашей команды не указан"} - ${cardData.enemyTeamScores || "Голы команды противника не указан"}`}
+                        </p>;
+
+                    secondP = <p class="card-text">{`Длительность: ${cardData.duration || "Не указана"}`}</p>;
+                    date = <p class="card-text card-date">{`Дата: ${dateValue || "Не указана"}`}</p>;
                     break;
 
                 case "Disqualifications":
-                    cardHeader = <h5 class="card-title">{`${cardData.person?.name}`}</h5>;
-                    firstP = <p class="card-text">{`Причина: ${cardData.displayName}`}</p>;
-                    secondP = <p class="card-text">{`Начало: ${cardData.startDate.split("T")[0]}`}</p>;
-                    thirdP = <p class="card-text">{`Начало: ${cardData.endDate.split("T")[0]}`}</p>;
+                    cardHeader = <h5 class="card-title">{`${cardHeaderValue}`}</h5>;
+                    firstP = <p class="card-text">{`Причина: ${cardData.displayName || "Не указана"}`}</p>;
+                    secondP = <p class="card-text">{`Начало: ${cardData.startDate?.split("T")[0] || "Не указана"}`}</p>;
+                    thirdP = <p class="card-text">{`Начало: ${cardData.endDate?.split("T")[0] || "Не указана"}`}</p>;
                     break;
 
                 default:
-                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber}`}</p>;
-                    secondP = <p class="card-text">{`Домашний телефон: ${cardData.person?.homePhoneNumber}`}</p>;
-                    thirdP = <p class="card-text">{`Адрес: ${cardData.person?.address}`}</p>;
+                    firstP = <p class="card-text">{`Рабочий телефон: ${cardData.person?.workPhoneNumber || "Не указана"}`}</p>;
+                    secondP = <p class="card-text">{`Домашний телефон: ${cardData.person?.homePhoneNumber || "Не указана"}`}</p>;
+                    thirdP = <p class="card-text">{`Адрес: ${cardData.person?.address || "Не указана"}`}</p>;
                     break;
             }
 
