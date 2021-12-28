@@ -5,6 +5,9 @@ namespace FootballClub
 {
     public class FootballClubDbContext : DbContext
     {
+        public FootballClubDbContext(DbContextOptions<FootballClubDbContext> options) : base(options)
+        {}
+
         public DbSet<Person> Persons { get; set; }
 
         public DbSet<Coach> Coaches { get; set; }
