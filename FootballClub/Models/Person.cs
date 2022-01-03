@@ -2,10 +2,8 @@
 
 namespace FootballClub.Models
 {
-    public class Person
+    public class Person : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; }
 
         public string HomePhoneNumber { get; set; }
