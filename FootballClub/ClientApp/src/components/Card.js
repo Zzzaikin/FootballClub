@@ -17,12 +17,16 @@ function Card(props) {
         );
     }
 
-    let entityId = props.entityId;
+    let entityId = { id: props.entityId };
 
     async function deleteRow() {
         let entityName = props.entityName.toLowerCase();
-        let response = await fetch(`/Data/DeleteEntity?entityName=${entityName}&id=${entityId}`, {
-            method: 'DELETE'
+        let response = await fetch(`/${entityName}/DeleteEntity`, {
+            method: 'DELETE',
+            body: JSON.stringify(entityId),
+            headers: {
+                'Content-Type': 'application/json'
+            },
         });
 
         setDeleteModalBox([]);

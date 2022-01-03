@@ -8,10 +8,11 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("MatchResult")]
     public class MatchResultsController : FootballClubBaseController<MatchResultsController>
     {
-        public MatchResultsController(IStringLocalizer<MatchResultsController> localizer, ILogger<MatchResultsController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+        public MatchResultsController(IStringLocalizer<MatchResultsController> localizer, ILogger<MatchResultsController> logger, 
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 

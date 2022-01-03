@@ -6,17 +6,17 @@ using System;
 
 namespace FootballClub.Controllers
 {
-    public class FootballClubBaseController<T> : ControllerBase
+    public class FootballClubBaseController<TController> : ControllerBase
     {
         /// <summary>
         /// Локализатор.
         /// </summary>
-        protected IStringLocalizer<T> Localizer { get; private set; }
+        protected IStringLocalizer<TController> Localizer { get; private set; }
 
         /// <summary>
         /// Логгер.
         /// </summary>
-        protected ILogger<T> Logger { get; private set; }
+        protected ILogger<TController> Logger { get; private set; }
 
         /// <summary>
         /// Контекст базы данных футбольного клуба.
@@ -34,18 +34,18 @@ namespace FootballClub.Controllers
         protected IConfiguration Configuration { get; private set; }
 
         /// <summary>
-        /// Инициализирует контексты базы данных, логгер, конфигурацию и локализатор.
+        /// Инициализирует контексты базы данных футбольного клуба и схемы таблиц, логгер, конфигурацию и локализатор.
         /// </summary>
         /// <param name="logger">Логгер</param>
         /// <param name="footballClubDbContext">Контекст базы данных футбольного клуба</param>
         /// <param name="localizer">Локализатор.</param>
         /// <param name="informationSchemaContext">Контекст базы данных схемы объектов</param>
         /// <param name="configuration">Конфигурация</param>
-        public FootballClubBaseController(IStringLocalizer<T> localizer, ILogger<T> logger, FootballClubDbContext footballClubDbContext,
-            InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+        public FootballClubBaseController(IStringLocalizer<TController> localizer, ILogger<TController> logger,
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
         {
-            FootballClubDbContext = footballClubDbContext;
             Localizer = localizer;
+            FootballClubDbContext = footballClubDbContext;
             Logger = logger;
             InformationSchemaContext = informationSchemaContext;
             Configuration = configuration;

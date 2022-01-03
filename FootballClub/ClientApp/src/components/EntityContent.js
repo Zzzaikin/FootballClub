@@ -46,8 +46,7 @@ export default function EntityContentOnCardPage(props) {
 
             if (personId) {
                 if ((entity.whetherToLoadPerson)) {
-                    let response = await fetch(`/Data/GetPersonsById?id=${personId}`);
-                    person = await response.json();
+                    person = entity.person
                 }
             }
         }

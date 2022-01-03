@@ -10,17 +10,18 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("EmployeeRecovery")]
     public class EmployeeRecoveriesController : FootballClubBaseController<EmployeeRecoveriesController>, IEntityController<EmployeeRecovery>
     {
         public EmployeeRecoveriesController(IStringLocalizer<EmployeeRecoveriesController> localizer, ILogger<EmployeeRecoveriesController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        public EmployeeRecovery EmptyEntity
+        [HttpGet("GetEmptyEntity")]
+        public EmployeeRecovery GetEmptyEntity()
         {
-            [HttpGet("GetEmptyEntity")]
-            get => new();
+            return new EmployeeRecovery();
         }
 
         [HttpDelete("DeleteEntity")]

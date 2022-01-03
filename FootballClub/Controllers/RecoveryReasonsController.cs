@@ -1,23 +1,22 @@
-﻿using FootballClub.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Linq;
 
 namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("RecoveryReason")]
     public class RecoveryReasonsController : FootballClubBaseController<RecoveryReasonsController>
     {
-        public RecoveryReasonsController(IStringLocalizer<RecoveryReasonsController> localizer, ILogger<RecoveryReasonsController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+        public RecoveryReasonsController(IStringLocalizer<RecoveryReasonsController> localizer, ILogger<RecoveryReasonsController> logger, 
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        [HttpGet("GetRecoveryReasonOptions")]
+        [HttpGet("GetEntityOptions")]
         public IActionResult GetRecoveryReasonsOptions(int from = 0, int count = 0)
         {
             ValidateIntervalParams(from, count);

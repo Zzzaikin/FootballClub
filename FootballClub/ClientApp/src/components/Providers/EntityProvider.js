@@ -7,14 +7,14 @@ export async function getEntity(entityName, entityId) {
 export async function getEmptyEntity(entityName) {
     validateEntityName(entityName);
 
-    let response = await fetch(`Data/GetEmpty${entityName}`);
+    let response = await fetch(`${entityName}/GetEmptyEntity`);
     return await response.json();
 }
 
 async function getEntityFromDatabase(entityName, entityId) {
     validateEntityNameAndId(entityName, entityId);
 
-    let response = await fetch(`Data/Get${entityName}ById?id=${entityId}`);
+    let response = await fetch(`${entityName}/GetEntityById?id=${entityId}`);
     return await response.json();
 }
 

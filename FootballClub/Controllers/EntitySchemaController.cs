@@ -24,7 +24,7 @@ namespace FootballClub.Controllers
         /// <param name="localizer">Локализатор.</param>
         /// <param name="informationSchemaContext">Контекст базы данных схемы объектов</param>
         /// <param name="configuration">Конфигурация</param>
-        public EntitySchemaController(IStringLocalizer<EntitySchemaController> localizer, ILogger<EntitySchemaController> logger,
+        public EntitySchemaController(IStringLocalizer<EntitySchemaController> localizer, ILogger<EntitySchemaController> logger, 
             FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }

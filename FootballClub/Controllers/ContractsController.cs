@@ -10,17 +10,18 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ConstractsController : FootballClubBaseController<ConstractsController>, IEntityController<Contract>
+    [Route("Contract")]
+    public class ContractsController : FootballClubBaseController<ContractsController>, IEntityController<Contract>
     {
-        public ConstractsController(IStringLocalizer<ConstractsController> localizer, ILogger<ConstractsController> logger,
+        public ContractsController(IStringLocalizer<ContractsController> localizer, ILogger<ContractsController> logger, 
             FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        public Contract EmptyEntity
+        [HttpGet("GetEmptyEntity")]
+        public Contract GetEmptyEntity()
         {
-            [HttpGet("GetEmptyEntity")]
-            get => new();
+            return new Contract();
         }
 
         [HttpDelete("DeleteEntity")]
@@ -78,7 +79,8 @@ namespace FootballClub.Controllers
                 select new
                 {
                     Id = contractOption.Id,
-                    DisplayValue = $"{contractOption.Sum} {Localizer["Currensy"].Value} {contractOption.StartDate}-{contractOption.EndDate}"
+                    DisplayValue = $"{contractOption.Sum} {Localizer["Currensy"].Value} " +
+                    $"{contractOption.StartDate.ToShortDateString()}-{contractOption.EndDate.ToShortDateString()}"
                 };
 
             return Ok(contractOptions);

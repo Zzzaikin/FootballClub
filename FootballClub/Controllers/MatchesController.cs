@@ -10,17 +10,18 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("Match")]
     public class MatchesController : FootballClubBaseController<MatchesController>, IEntityController<Match>
     {
-        public MatchesController(IStringLocalizer<MatchesController> localizer, ILogger<MatchesController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+        public MatchesController(IStringLocalizer<MatchesController> localizer, ILogger<MatchesController> logger, 
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        public Match EmptyEntity
+        [HttpGet("GetEmptyEntity")]
+        public Match GetEmptyEntity()
         {
-            [HttpGet("GetEmptyEntity")]
-            get => new();
+            return new Match();
         }
 
         [HttpDelete("DeleteEntity")]

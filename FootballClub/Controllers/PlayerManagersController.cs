@@ -10,17 +10,18 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("PlayerManager")]
     public class PlayerManagersController : FootballClubBaseController<PlayerManagersController>, IEntityController<PlayerManager>
     {
-        public PlayerManagersController(IStringLocalizer<PlayerManagersController> localizer, ILogger<PlayerManagersController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+        public PlayerManagersController(IStringLocalizer<PlayerManagersController> localizer, ILogger<PlayerManagersController> logger, 
+            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        public PlayerManager EmptyEntity
+        [HttpGet("GetEmptyEntity")]
+        public PlayerManager GetEmptyEntity()
         {
-            [HttpGet("GetEmptyEntity")]
-            get => new();
+            return new PlayerManager();
         }
 
         [HttpDelete("DeleteEntity")]

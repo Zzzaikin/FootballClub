@@ -10,17 +10,18 @@ namespace FootballClub.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Route("Disqualification")]
     public class DisqualificationsController : FootballClubBaseController<DisqualificationsController>, IEntityController<Disqualification>
     {
-        public DisqualificationsController(IStringLocalizer<DisqualificationsController> localizer, ILogger<DisqualificationsController> logger,
+        public DisqualificationsController(IStringLocalizer<DisqualificationsController> localizer, ILogger<DisqualificationsController> logger, 
             FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
             : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
         { }
 
-        public Disqualification EmptyEntity
+        [HttpGet("GetEmptyEntity")]
+        public Disqualification GetEmptyEntity()
         {
-            [HttpGet("GetEmptyEntity")]
-            get => new();
+            return new Disqualification();
         }
 
         [HttpDelete("DeleteEntity")]
@@ -48,6 +49,13 @@ namespace FootballClub.Controllers
 
             var disqualifications =
                  from disqualification in FootballClubDbContext.Disqualifications.Skip(@from).Take(count).ToList()
+
+                 join person in FootballClubDbContext.Persons
+                 on disqualification.PersonId equals person.Id
+                 into persons
+
+                 from person in persons.DefaultIfEmpty()
+
                  select disqualification;
 
             return Ok(disqualifications);
