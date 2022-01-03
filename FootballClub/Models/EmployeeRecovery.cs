@@ -1,18 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballClub.Models
 {
-    public class EmployeeRecovery
+    public class EmployeeRecovery : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public Guid? PersonId { get; set; }
 
         public Person Person { get; set; }
-
-        [NotMapped]
-        public bool WhetherToLoadPerson { get => false; }
 
         public Guid? RecoveryReasonId { get; set; }
 

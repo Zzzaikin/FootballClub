@@ -17,7 +17,7 @@ namespace FootballClub.Controllers
         /// <summary>
         /// Логгер.
         /// </summary>
-        private readonly ILogger<DataController> _logger;
+        private readonly ILogger<DashboardController> _logger;
 
         /// <summary>
         /// Контекст базы данных.
@@ -29,7 +29,7 @@ namespace FootballClub.Controllers
         /// </summary>
         /// <param name="logger">Логгер</param>
         /// <param name="footballClubDbContext">Контекст базы данных</param>
-        public DashboardController(ILogger<DataController> logger, FootballClubDbContext footballClubDbContext)
+        public DashboardController(ILogger<DashboardController> logger, FootballClubDbContext footballClubDbContext)
         {
             _logger = logger;
             _footballClubDbContext = footballClubDbContext;

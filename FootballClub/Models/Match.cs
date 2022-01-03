@@ -2,10 +2,8 @@
 
 namespace FootballClub.Models
 {
-    public class Match
+    public class Match : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public DateTime Date { get; set; }
 
         public Guid? MatchResultId { get; set; }

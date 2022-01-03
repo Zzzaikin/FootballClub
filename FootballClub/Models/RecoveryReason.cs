@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace FootballClub.Models
+﻿namespace FootballClub.Models
 {
-    public class RecoveryReason
+    public class RecoveryReason : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string DisplayName { get; set; }
     }
 }

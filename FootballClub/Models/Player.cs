@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballClub.Models
 {
-    public class Player
+    public class Player : BaseEntity
     {
-        public Guid Id { get; set; }
+        public Player()
+        {
+            WhetherToLoadPerson = true;
+        }
 
         public Guid? PersonId { get; set; }
 
         public Person Person { get; set; }
-
-        [NotMapped]
-        public bool WhetherToLoadPerson { get => true; }
 
         public Guid? ContractId { get; set; }
 

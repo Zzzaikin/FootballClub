@@ -83,7 +83,7 @@ export default function SaveButton(props) {
 
         const action = props.insertingMode ? "Insert" : "Update";
 
-        await fetch(`/Data/${action}${entityName}`, {
+        await fetch(`/${entityName}/${action}Entity`, {
             method: 'POST',
             body: JSON.stringify(entity),
             headers: {

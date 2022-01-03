@@ -36,7 +36,7 @@ export default function Section(props) {
     async function setShowMoreButtonVisible() {
         const entityName = getEntityName();
 
-        let response = await fetch(`Data/GetCountOf${entityName}`);
+        let response = await fetch(`${entityName}/GetCountOfEntityRecords`);
         let countOfRecords = await response.json();
 
         if ((countOfRecords - count) > 0) {
@@ -59,7 +59,7 @@ export default function Section(props) {
     async function setEntityCards(entityName) {
         const name = entityName || getEntityName();
 
-        let response = await fetch(`Data/Get${name}?from=${from}&count=${count}`);
+        let response = await fetch(`${name}/GetEntities?from=${from}&count=${count}`);
         let result = await response.json();
 
         let cardsMarkup = result?.map(cardData => {
@@ -97,7 +97,6 @@ export default function Section(props) {
                     break;
 
                 case "Disqualifications":
-                    cardHeader = <h5 class="card-title">{`${cardHeaderValue}`}</h5>;
                     firstP = <p class="card-text">{`Причина: ${cardData.displayName || "Не указана"}`}</p>;
                     secondP = <p class="card-text">{`Начало: ${cardData.startDate?.split("T")[0] || "Не указана"}`}</p>;
                     thirdP = <p class="card-text">{`Начало: ${cardData.endDate?.split("T")[0] || "Не указана"}`}</p>;

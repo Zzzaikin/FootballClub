@@ -1,7 +1,7 @@
 ﻿export async function getSchema(entityName) {
     validateEntityName(entityName);
 
-    let response = await fetch(`/Data/GetRuEntitySchema?entityName=${entityName}`);
+    let response = await fetch(`/EntitySchema/GetRuEntitySchema?entityName=${entityName}`);
     return await response.json();
 }
 

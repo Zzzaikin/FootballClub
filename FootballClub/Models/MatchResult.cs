@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace FootballClub.Models
+﻿namespace FootballClub.Models
 {
-    public class MatchResult
+    public class MatchResult : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string DisplayName { get; set; }
     }
 }

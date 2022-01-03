@@ -24,7 +24,7 @@ export default function CustomSelect(props) {
         const entityName = columnName.replace("Id", "");
         const selectedId = props.selected;
 
-        let response = await fetch(`/Data/Get${entityName}Options?from=${from}&count=${count}`);
+        let response = await fetch(`/${entityName}/GetEntityOptions?from=${from}&count=${count}`);
         let options = await response.json();
 
         const mappedOptions = options.map((option) => {

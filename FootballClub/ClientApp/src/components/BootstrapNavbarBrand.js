@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import $ from 'jquery';
 
 export default function BootstrapNavbarBrand(props) {
     const [isActive, setIsActive] = useState();
