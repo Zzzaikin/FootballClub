@@ -8,6 +8,10 @@ namespace FootballClub
         public FootballClubDbContext(DbContextOptions<FootballClubDbContext> options) : base(options)
         { }
 
+        public DbSet<EnemyTeamGoal> EnemyTeamGoals { get; set; }
+
+        public DbSet<OurTeamGoal> OurTeamGoals { get; set; }
+
         public DbSet<Person> Persons { get; set; }
 
         public DbSet<Coach> Coaches { get; set; }

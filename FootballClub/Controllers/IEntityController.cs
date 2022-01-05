@@ -54,7 +54,7 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр "От"</param>
         /// <param name="count">Параметр "Количество"</param>
         /// <returns>Результат выполнения запроса с объектом options.</returns>
-        IActionResult GetEntityOptions(int from = 0, int count = 0);
+        IActionResult GetEntityOptions(int from = 0, int count = 100);
 
         /// <summary>
         /// Возвращает сущности на указанном интервале.
@@ -62,6 +62,6 @@ namespace FootballClub.Controllers
         /// <param name="from">Параметр выборки "От"</param>
         /// <param name="count">Параметр определяющий количество получемых записей</param>
         /// <returns>Сущности со статусом запроса.</returns>
-        IActionResult GetEntities(int from = 0, int count = 0);
+        IActionResult GetEntities(int from = 0, int count = 100);
     }
 }

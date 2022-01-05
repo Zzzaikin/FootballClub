@@ -43,7 +43,7 @@ namespace FootballClub.Controllers
         }
 
         [HttpGet("GetEntities")]
-        public IActionResult GetEntities(int from = 0, int count = 0)
+        public IActionResult GetEntities(int from = 0, int count = 100)
         {
             ValidateIntervalParams(from, count);
 
@@ -76,7 +76,7 @@ namespace FootballClub.Controllers
         }
 
         [HttpGet("GetEntityOptions")]
-        public IActionResult GetEntityOptions(int from = 0, int count = 0)
+        public IActionResult GetEntityOptions(int from = 0, int count = 100)
         {
             ValidateIntervalParams(from, count);
 
