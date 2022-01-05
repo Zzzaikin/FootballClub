@@ -30,7 +30,7 @@ export default function Section(props) {
     }, []);
 
     function getEntityName() {
-        return props.match.path.slice(1).split("S")[0];
+        return props.match.path.slice(1).replace("Section", "");
     }
 
     async function setShowMoreButtonVisible() {
