@@ -5,6 +5,7 @@ import EmployeeRecoveriesMiniDashboard from './EmployeeRecoveriesMiniDashboard';
 import MatchesMiniDashboard from './MatchesMiniDashboard';
 import Section from './Section';
 import EntityContent from './EntityContent';
+import GoalsContent from './GoalsContent';
 
 function Content() {
     return (
@@ -21,8 +22,13 @@ function Content() {
             <Route path='/PlayersCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true} />} />} />
             <Route path='/CoachesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
             <Route path='/PlayerManagersCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
-            <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false}/>} />} />
-            <Route path='/MatchesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={true}/>} />} />
+            <Route path='/EmployeeRecoveriesCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false} />} />} />
+            <Route path='/MatchesCardPage' render={() =>
+                <CardPage
+                    content={<EntityContent skipPersonId={true} />}
+                    goalsContent={<GoalsContent />}
+                />}
+            />
             <Route path='/DisqualificationsCardPage' render={() => <CardPage content={<EntityContent skipPersonId={false} />} />} />
 
             <Route path='/InsertPlayers' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />

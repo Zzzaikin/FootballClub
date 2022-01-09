@@ -6,80 +6,35 @@ import * as SchemaProvider from './Providers/SchemaProvider';
 import * as EntityProvider from './Providers/EntityProvider';
 
 export default function SaveButton(props) {
-    async function normalizeSerializedArray(serializedArray, entityName, personId) {
-        if (!serializedArray) {
-            throw new Error("Serialized array is not defined");
-        }
 
+    function getDataFromForm(entityName) {
         SchemaProvider.validateEntityName(entityName);
 
-        let entitySchema = await SchemaProvider.getSchema(entityName);
-        let entityId;
-        let entity;
+        let entity = $(`#${entityName}-info-form`).serializeArray().reduce((obj, item) => {
+            if (item.value === "false")
+                item.value = false;
+            else if (item.value === "true")
+                item.value = true;
 
-        if (entityName === "Persons")
-            entityId = personId;
-        else
-            entityId = UrlParser.getEntityIdFromUrlForCardPage();
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
 
-
-        if (props.insertingMode)
-            entity = await EntityProvider.getEmptyEntity(entityName);
-        else
-            entity = await EntityProvider.getEntity(entityName, entityId);
-
-        await entitySchema.forEach(column => {
-            const dataBaseColumnName = column.dataBaseColumnName;
-            const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
-            const columnDataType = column.dataType;
-
-            const columnInSerializedArray = serializedArray.find(item => item.name === dataBaseColumnName);
-
-            if (columnInSerializedArray) {
-                let columnValueInSerializedArray = columnInSerializedArray.value;
-
-                if (!columnValueInSerializedArray) {
-                    columnValueInSerializedArray = null;
-                }
-
-                const isDate = (columnValueInSerializedArray !== null) && (columnDataType === "datetime");
-
-                if (isDate) {
-                    const splittedValue = columnValueInSerializedArray.split('/');
-                    columnValueInSerializedArray = `${splittedValue[2]}-${splittedValue[1]}-${splittedValue[0]}`;
-                }
-
-                const isBoolean = (columnValueInSerializedArray !== null) && (columnDataType === "tinyint");
-
-                if (isBoolean) {
-                    columnValueInSerializedArray = columnValueInSerializedArray === "Да" ? true : false;
-                }
-
-                entity[`${columnName}`] = columnValueInSerializedArray;
-            }
-        });
-
-        return entity;
+        return entity
     }
 
     async function save() {
-        let entitySerializedInArray = $('#entity-info-form').serializeArray();
-        let personSerializedInArray = $('#person-info-form').serializeArray();
-
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
+        const entityId = UrlParser.getEntityIdFromUrlForCardPage();
 
-        let entity = await normalizeSerializedArray(entitySerializedInArray, entityName);
+        let entity = getDataFromForm(entityName);
+        let person = getDataFromForm('Persons');
 
-        if (personSerializedInArray.length > 0) {
-            let personId;
+        if (!props.insertingMode)
+            entity.Id = entityId;
 
-            if (!props.insertingMode) {
-                personId = entity.person.id;
-            }
-
-            let person = await normalizeSerializedArray(personSerializedInArray, "Persons", personId);
+        if (Object.keys(person).length !== 0)
             entity.person = person;
-        }
 
         const action = props.insertingMode ? "Insert" : "Update";
 

@@ -7,15 +7,15 @@ import "react-datepicker/dist/react-datepicker.css";
 registerLocale("ru", ru);
 
 export default function CustomDatepicker(props) {
-    const [date, settDate] = useState(props.date);
+    const [date, setDate] = useState(props.date);
 
     return (
         <div onClick={props.onClick}>
             <DatePicker className="react-datepicker-ignore-onclickoutside form-control custom-select"
                 locale="ru"
-                dateFormat="dd/MM/yyyy"
+                dateFormat="yyyy-MM-dd"
                 selected={date}
-                onChange={(date) => settDate(date)}
+                onChange={(date) => setDate(date)}
                 name={props.name}
             />
         </div>

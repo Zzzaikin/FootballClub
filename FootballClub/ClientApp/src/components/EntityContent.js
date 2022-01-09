@@ -1,16 +1,12 @@
 ﻿import React, { useEffect, useState } from 'react';
-import InputMask from 'react-input-mask';
-import Input from './Input/Input';
 import InputsCard from './Input/InputsCard';
-import CustomSelect from './CustomSelect';
-import CardPageDatepicker from './CardPageDatepicker';
 import $ from 'jquery';
 
 import * as SchemaProvider from './Providers/SchemaProvider';
-import * as EntityProvider from './Providers/EntityProvider';
 import * as UrlParser from './UrlParser';
+import * as InputsBuilder from './Input/InputsBuilder';
 
-export default function EntityContentOnCardPage(props) {
+export default function EntityContent(props) {
     const [entityInputs, setEntityInputs] = useState([]);
     const [personInfo, setPersonInfo] = useState([]);
 
@@ -28,20 +24,14 @@ export default function EntityContentOnCardPage(props) {
         return await SchemaProvider.getSchema("Persons");
     }
 
-    async function getEntity() {
-        const entityName = UrlParser.getEntityNameFromUrlForCardPage();
-        const entityId = UrlParser.getEntityIdFromUrlForCardPage();
-        return await EntityProvider.getEntity(entityName, entityId);
-    }
-
     async function setEntityInputsBySchema(entitySchema) {
-        validateSchema(entitySchema);
+        InputsBuilder.validateSchema(entitySchema);
 
         let entity;
         let person;
 
         if (!props.insertingMode) {
-            entity = await getEntity();
+            entity = await InputsBuilder.getEntity();
             const personId = entity?.personId;
 
             if (personId) {
@@ -51,7 +41,9 @@ export default function EntityContentOnCardPage(props) {
             }
         }
 
-        let mappedEntityInputs = getMappedInputsBySchema(entitySchema, entity);
+        const skipPersonId = props.skipPersonId;
+
+        let mappedEntityInputs = InputsBuilder.getMappedInputsBySchema(entitySchema, entity, skipPersonId, showSaveButtton);
         setEntityInputs(mappedEntityInputs);
 
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
@@ -60,100 +52,11 @@ export default function EntityContentOnCardPage(props) {
 
         if (whetherPersonInfo) {
             let personSchema = await getPersonSchema();
-            let mappedPersonInputs = getMappedInputsBySchema(personSchema, person);
+            let mappedPersonInputs = InputsBuilder.getMappedInputsBySchema(personSchema, person, skipPersonId, showSaveButtton);
 
             let personInfoCard = getPersonInfoCard(mappedPersonInputs);
             setPersonInfo(personInfoCard);
         }
-    }
-
-    function getMappedInputsBySchema(schema, entity) {
-        validateSchema(schema);
-
-        let mappedInputs = schema.map(column => {
-
-            const dataBaseColumnName = column.dataBaseColumnName;
-            const dataBaseDataType = column.dataType;
-
-            const skip = (dataBaseColumnName === "Id") || ((dataBaseColumnName === "PersonId") && (props.skipPersonId));
-
-            if (skip)
-                return;
-
-            const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
-            const columnValue = entity ? entity[columnName] : "";
-            let inputComponent;
-
-            if (dataBaseColumnName.includes("Phone")) {
-                inputComponent =
-                    <InputMask
-                        mask="+\7(999)999 99 99"
-                        maskChar=" " type="text"
-                        className="form-control"
-                        aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={columnValue}
-                        name={dataBaseColumnName}
-                        onClick={e => { showSaveButtton() }} />;
-            } else if (dataBaseColumnName.endsWith("Id")) {
-                inputComponent =
-                    <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
-                        <CustomSelect
-                            columnName={dataBaseColumnName}
-                            selected={columnValue}
-                            onClick={showSaveButtton} />
-                    </div>
-            } else if (dataBaseDataType === "datetime") {
-                if (columnValue) {
-                    const indexOfT = columnValue.indexOf('T');
-                    const date = columnValue.substr("T", indexOfT).split('-');
-
-                    inputComponent =
-                        <CardPageDatepicker name={dataBaseColumnName} date={new Date(date[0], date[1], date[2])} onClick={e => { showSaveButtton() }} />
-                } else {
-                    inputComponent =
-                        <CardPageDatepicker name={dataBaseColumnName} onClick={showSaveButtton} />
-                }
-            } else if (dataBaseDataType === "tinyint") {
-                let options;
-
-                if (columnValue) {
-                    options =
-                        <>
-                            <option selected defaultValue={columnValue}>Да</option>
-                            <option defaultValue={columnValue}>Нет</option>
-                        </>
-                } else {
-                    options =
-                        <>
-                            <option defaultValue={columnValue}>Да</option>
-                            <option selected defaultValue={columnValue}>Нет</option>
-                        </>
-                }
-
-                inputComponent =
-                    <div type="text" className="input-group-prepend custom-input-group-prepend">
-                        <select className="custom-select" name={dataBaseColumnName} onClick={showSaveButtton}>
-                            {options}
-                        </select>
-                    </div>
-            } else {
-                inputComponent =
-                    <input type="text" className="form-control" name={dataBaseColumnName}
-                        aria-describedby="inputGroup-sizing-sm"
-                        defaultValue={columnValue}
-                        onClick={showSaveButtton} />;
-            }
-
-            return (
-                <Input
-                    columnName={column.dataBaseColumnName}
-                    inputLabel={column.localizedColumnName}
-                    inputComponent={inputComponent}
-                />
-            );
-        });
-
-        return mappedInputs;
     }
 
     function showSaveButtton() {
@@ -174,18 +77,12 @@ export default function EntityContentOnCardPage(props) {
         );
     }
 
-    function validateSchema(schema) {
-        if (!schema) {
-            throw new Error("Schema can not be defined");
-        }
-    }
-
     return (
         <div className="inputs-container">
-            <form id="person-info-form">
+            <form id="Persons-info-form">
                 {personInfo}
             </form>
-            <form id="entity-info-form">
+            <form id={`${UrlParser.getEntityNameFromUrlForCardPage()}-info-form`}>
                 <InputsCard
                     header={"Основная информация"}
                     inputs={entityInputs}

@@ -26,6 +26,7 @@ export default function CardPage(props) {
             </div>
             <div className="entity-content">
                 {props.content}
+                {props.goalsContent}
             </div>
             {redirectToSection}
         </div>

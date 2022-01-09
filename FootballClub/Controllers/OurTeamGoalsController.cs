@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace FootballClub.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+    [Route("OurTeamGoal")]
     public class OurTeamGoalsController : FootballClubBaseController<OurTeamGoalsController>, IEntityController<OurTeamGoal>
     {
         public OurTeamGoalsController(IStringLocalizer<OurTeamGoalsController> localizer, ILogger<OurTeamGoalsController> logger,
@@ -61,28 +64,7 @@ namespace FootballClub.Controllers
         [HttpGet("GetEntityOptions")]
         public IActionResult GetEntityOptions(int from = 0, int count = 100)
         {
-            var ourTeamGoalOptions =
-                from ourTeamGoalOption in FootballClubDbContext.OurTeamGoals.ToList()
-
-                join player in FootballClubDbContext.Players
-                on ourTeamGoalOption.Author equals player.Id
-                into players
-
-                from goalAuthor in players.DefaultIfEmpty()
-
-                join person in FootballClubDbContext.Persons
-                on goalAuthor.Id equals person.Id
-                into goalPersons
-
-                from goalPerson in goalPersons.DefaultIfEmpty()
-
-                select new
-                {
-                    Id = ourTeamGoalOption.Id,
-                    DisplayName = $"{Localizer["Score_A_Goal"].Value} {goalPerson.Name}"
-                };
-
-            return Ok(ourTeamGoalOptions);
+            throw new NotImplementedException();
         }
 
         [HttpPost("InsertEntity")]

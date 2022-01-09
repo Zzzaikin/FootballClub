@@ -4,10 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FootballClub.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+    [Route("EnemyTeamGoal")]
     public class EnemyTeamGoalsController : FootballClubBaseController<EnemyTeamGoalsController>, IEntityController<EnemyTeamGoal>
     {
         public EnemyTeamGoalsController(IStringLocalizer<EnemyTeamGoalsController> localizer, ILogger<EnemyTeamGoalsController> logger,
@@ -61,16 +65,7 @@ namespace FootballClub.Controllers
         [HttpGet("GetEntityOptions")]
         public IActionResult GetEntityOptions(int from = 0, int count = 100)
         {
-            var enemyTeamGoalOptions =
-                from enemyTeamGoalOption in FootballClubDbContext.EnemyTeamGoals.ToList()
-
-                select new
-                {
-                    Id = enemyTeamGoalOption.Id,
-                    DisplayName = $"{Localizer["Score_A_Goal"].Value} {enemyTeamGoalOption.Author}"
-                };
-
-            return Ok(enemyTeamGoalOptions);
+            throw new NotImplementedException();
         }
 
         [HttpPost("InsertEntity")]
