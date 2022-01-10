@@ -27,5 +27,9 @@ namespace FootballClub.Models
         public bool WithSecondOvertime { get; set; }
 
         public bool PenaltyShootOut { get; set; }
+
+        public Guid? TournamentId { get; set; }
+
+        public Tournament Tournament { get; set; }
     }
 }

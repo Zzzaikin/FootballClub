@@ -225,4 +225,7 @@
   <data name="WorkPhoneNumber" xml:space="preserve">
     <value>Рабочий номер телефона</value>
   </data>
+  <data name="TournamentId" xml:space="preserve">
+    <value>Турнир</value>
+  </data>
 </root>

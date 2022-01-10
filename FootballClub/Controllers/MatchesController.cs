@@ -56,6 +56,12 @@ namespace FootballClub.Controllers
 
                 from matchResult in matchResults.DefaultIfEmpty()
 
+                join tournament in FootballClubDbContext.Tournaments
+                on match.TournamentId equals tournament.Id
+                into tournaments
+
+                from tournament in tournaments.DefaultIfEmpty()
+
                 select match;
 
             return Ok(matches);
