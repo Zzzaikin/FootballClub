@@ -183,9 +183,6 @@
   <data name="IsViziting" xml:space="preserve">
     <value>В гостях</value>
   </data>
-  <data name="MatchResultId" xml:space="preserve">
-    <value>Результат</value>
-  </data>
   <data name="Name" xml:space="preserve">
     <value>Имя</value>
   </data>

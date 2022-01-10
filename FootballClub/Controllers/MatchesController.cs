@@ -50,12 +50,6 @@ namespace FootballClub.Controllers
             var matches =
                 from match in FootballClubDbContext.Matches.Skip(@from).Take(count).ToList()
 
-                join matchResult in FootballClubDbContext.MatchResults
-                on match.MatchResultId equals matchResult.Id
-                into matchResults
-
-                from matchResult in matchResults.DefaultIfEmpty()
-
                 join tournament in FootballClubDbContext.Tournaments
                 on match.TournamentId equals tournament.Id
                 into tournaments

@@ -26,8 +26,6 @@ namespace FootballClub
 
         public DbSet<Match> Matches { get; set; }
 
-        public DbSet<MatchResult> MatchResults { get; set; }
-
         public DbSet<Player> Players { get; set; }
 
         public DbSet<PlayerManager> PlayerManagers { get; set; }

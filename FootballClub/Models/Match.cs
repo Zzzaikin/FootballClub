@@ -6,10 +6,6 @@ namespace FootballClub.Models
     {
         public DateTime Date { get; set; }
 
-        public Guid? MatchResultId { get; set; }
-
-        public MatchResult MatchResult { get; set; }
-
         public string OurTeamName { get; set; }
 
         public string EnemyTeamName { get; set; }
