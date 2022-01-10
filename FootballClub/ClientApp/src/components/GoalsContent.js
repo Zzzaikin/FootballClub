@@ -13,7 +13,7 @@ export default function GoalsContent() {
 
     useEffect(() => {
         setGoalsContent('Our', setOurTeamGoalsContent);
-        setOurTeamGoalsContent('Enemy', setEnemyTeamGoalsContent);
+        setGoalsContent('Enemy', setEnemyTeamGoalsContent);
     }, []);
 
     async function setGoalsContent(team, setContent) {
@@ -29,12 +29,19 @@ export default function GoalsContent() {
         if (goals.length === 0)
             return;
 
-        let inputsCollection = await Promise.all(goals.map(async goal => {
+        let inputsCardsCollection = await Promise.all(goals.map(async goal => {
+
             let inputs = await InputsBuilder.getMappedInputsBySchema(schema, goal, false, showSaveButtton);
-            return inputs;
+            const inputsCard =
+                <div className="card ml-0 card-with-inputs">
+                    <div className="card-body">
+                        {inputs}
+                    </div>
+                </div>
+            return inputsCard;
         }));
 
-        setContent(inputsCollection);
+        setContent(inputsCardsCollection);
     }
 
     function showSaveButtton() {
@@ -52,11 +59,13 @@ export default function GoalsContent() {
 
     return (
         <div className="goals-content">
-            <div className="our-goals-content">
+            <h5 className="card-title goals-title">Голы нашей команды</h5>
+            <div className="team-goals-content">
                 {ourTeamGoalsContent}
                 <Link type="button" class="btn btn-link add-button">Добавить гол нашей команде...</Link>
             </div>
-            <div className="enemy-goals-content">
+            <h5 className="card-title goals-title">Голы команды противника</h5>
+            <div className="team-goals-content">
                 {enemyTeamGoalsContent}
                 <Link type="button" class="btn btn-link add-button">Добавить гол команде противника...</Link>
             </div>

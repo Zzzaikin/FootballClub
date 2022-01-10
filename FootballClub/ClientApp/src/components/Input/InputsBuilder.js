@@ -32,7 +32,9 @@ async function getInputBySchema(column, entity, skipPersonId, onInputClick) {
     const dataBaseColumnName = column.columnName;
     const dataBaseDataType = column.dataType;
 
-    const skip = (dataBaseColumnName === "Id") || ((dataBaseColumnName === "PersonId") && (skipPersonId));
+    const skip = (dataBaseColumnName === "Id") ||
+        ((dataBaseColumnName === "PersonId") && (skipPersonId)) ||
+        (dataBaseColumnName === "MatchId");
 
     if (skip)
         return;
