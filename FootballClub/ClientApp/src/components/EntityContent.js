@@ -14,7 +14,7 @@ export default function EntityContent(props) {
         async function setInputsByEntitySchema() {
             const schemaName = UrlParser.getEntityNameFromUrlForCardPage();
             const entitySchema = await SchemaProvider.getSchema(schemaName);
-            setEntityInputsBySchema(entitySchema);
+            await setEntityInputsBySchema(entitySchema);
         }
 
         setInputsByEntitySchema();
@@ -52,7 +52,7 @@ export default function EntityContent(props) {
 
         if (whetherPersonInfo) {
             let personSchema = await getPersonSchema();
-            let mappedPersonInputs = await InputsBuilder.   (personSchema, person, skipPersonId, showSaveButtton);
+            let mappedPersonInputs = await InputsBuilder.getMappedInputsBySchema(personSchema, person, skipPersonId, showSaveButtton);
 
             let personInfoCard = getPersonInfoCard(mappedPersonInputs);
             setPersonInfo(personInfoCard);

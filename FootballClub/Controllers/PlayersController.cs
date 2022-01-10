@@ -13,8 +13,8 @@ namespace FootballClub.Controllers
     [Route("Player")]
     public class PlayersController : FootballClubBaseController<PlayersController>, IEntityController<Player>
     {
-        public PlayersController(IStringLocalizer<PlayersController> localizer, ILogger<PlayersController> logger, 
-            FootballClubDbContext footballClubDbContext, IConfiguration configuration) 
+        public PlayersController(IStringLocalizer<PlayersController> localizer, ILogger<PlayersController> logger,
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration)
             : base(localizer, logger, footballClubDbContext, configuration)
         { }
 

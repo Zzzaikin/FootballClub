@@ -25,15 +25,16 @@ export default function GoalsContent() {
 
         let schema = await SchemaProvider.getSchema(entityName);
         let goals = await getGoals(entityName);
-        let goalsInputs = [];
 
         if (goals.length === 0)
             return;
 
-        Promise.all(goals.forEach(async goal => {
+        let inputsCollection = await Promise.all(goals.map(async goal => {
             let inputs = await InputsBuilder.getMappedInputsBySchema(schema, goal, false, showSaveButtton);
-            goalsInputs.push(inputs);
-        })).then(() => setContent(goalsInputs));
+            return inputs;
+        }));
+
+        setContent(inputsCollection);
     }
 
     function showSaveButtton() {
