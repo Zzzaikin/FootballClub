@@ -117,6 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="OwnGoalPlayerId" xml:space="preserve">
+    <value>Забил в свои ворота</value>
+  </data>
+  <data name="Score_A_Goal" xml:space="preserve">
+    <value>Гол забил:</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Минута</value>
+  </data>
+  <data name="TouchdownPassFrom" xml:space="preserve">
+    <value>Голевой пас</value>
+  </data>
+  <data name="AuthorPlayerId" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="OwnGoalPlayerName" xml:space="preserve">
+    <value>Забил в свои ворота</value>
+  </data>
+  <data name="TouchdownPassPlayerId" xml:space="preserve">
+    <value>Голевой пас</value>
+  </data>
+  <data name="WithPenalty" xml:space="preserve">
+    <value>Забил с пенальти</value>
+  </data>
   <data name="Address" xml:space="preserve">
     <value>Адрес</value>
   </data>
