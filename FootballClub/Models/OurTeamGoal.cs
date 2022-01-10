@@ -4,9 +4,9 @@ namespace FootballClub.Models
 {
     public class OurTeamGoal : Goal
     {
-        public Guid? Author { get; set; }
+        public Guid? AuthorPlayerId { get; set; }
 
-        public Guid? TouchdownPassFrom { get; set; }
+        public Guid? TouchdownPassPlayerId { get; set; }
 
         public string OwnGoalPlayerName { get; set; }
     }

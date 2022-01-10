@@ -12,8 +12,8 @@ namespace FootballClub.Controllers
     public class MatchResultsController : FootballClubBaseController<MatchResultsController>
     {
         public MatchResultsController(IStringLocalizer<MatchResultsController> localizer, ILogger<MatchResultsController> logger, 
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
-            : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration) 
+            : base(localizer, logger, footballClubDbContext, configuration)
         { }
 
         [HttpGet("GetEntityOptions")]

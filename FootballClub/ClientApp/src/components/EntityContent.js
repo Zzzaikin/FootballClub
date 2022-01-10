@@ -43,7 +43,7 @@ export default function EntityContent(props) {
 
         const skipPersonId = props.skipPersonId;
 
-        let mappedEntityInputs = InputsBuilder.getMappedInputsBySchema(entitySchema, entity, skipPersonId, showSaveButtton);
+        let mappedEntityInputs = await InputsBuilder.getMappedInputsBySchema(entitySchema, entity, skipPersonId, showSaveButtton);
         setEntityInputs(mappedEntityInputs);
 
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
@@ -52,7 +52,7 @@ export default function EntityContent(props) {
 
         if (whetherPersonInfo) {
             let personSchema = await getPersonSchema();
-            let mappedPersonInputs = InputsBuilder.getMappedInputsBySchema(personSchema, person, skipPersonId, showSaveButtton);
+            let mappedPersonInputs = await InputsBuilder.   (personSchema, person, skipPersonId, showSaveButtton);
 
             let personInfoCard = getPersonInfoCard(mappedPersonInputs);
             setPersonInfo(personInfoCard);

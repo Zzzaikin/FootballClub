@@ -14,8 +14,8 @@ namespace FootballClub.Controllers
     public class OurTeamGoalsController : FootballClubBaseController<OurTeamGoalsController>, IEntityController<OurTeamGoal>
     {
         public OurTeamGoalsController(IStringLocalizer<OurTeamGoalsController> localizer, ILogger<OurTeamGoalsController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
-            : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration)
+            : base(localizer, logger, footballClubDbContext, configuration)
         { }
 
         [HttpDelete("DeleteEntity")]
@@ -87,6 +87,25 @@ namespace FootballClub.Controllers
             var countOfEditRecords = FootballClubDbContext.SaveChanges();
 
             return countOfEditRecords > 0 ? Ok() : Problem(title: "No records has been updated.", statusCode: 500);
+        }
+
+        /// <summary>
+        /// Возвращает голы нашей команды по идентификатор матча.
+        /// </summary>
+        /// <param name="matchId">Иентификатор матча</param>
+        /// <returns>Статус выполнения запроса с голами нашей команды по идентификатору матча.</returns>
+        [HttpGet("GetGoalsByMatchId")]
+        public IActionResult GetGoalsByMatchId(Guid matchId)
+        {
+            ValidateId(matchId);
+
+            var ourTeamGoalsByMatchId =
+                from ourTeamGoal in FootballClubDbContext.OurTeamGoals
+                where ourTeamGoal.MatchId == matchId
+
+                select ourTeamGoal;
+
+            return Ok(ourTeamGoalsByMatchId);
         }
     }
 }

@@ -24,9 +24,14 @@ namespace FootballClub.Controllers
         protected FootballClubDbContext FootballClubDbContext { get; private set; }
 
         /// <summary>
-        /// Контекст базы данных схемы объектов.
+        /// Контекст базы данных схем объектов.
         /// </summary>
         protected InformationSchemaContext InformationSchemaContext { get; private set; }
+
+        /// <summary>
+        /// Контекст базы данных внешних ключей.
+        /// </summary>
+        protected KeyColumnUsageContext KeyColumnUsageContext { get; private set; }
 
         /// <summary>
         /// Конфигурация.
@@ -34,21 +39,34 @@ namespace FootballClub.Controllers
         protected IConfiguration Configuration { get; private set; }
 
         /// <summary>
-        /// Инициализирует контексты базы данных футбольного клуба и схемы таблиц, логгер, конфигурацию и локализатор.
+        /// Инициализирует контексты базы данных футбольного клуба, логгер, конфигурацию и локализатор.
         /// </summary>
         /// <param name="logger">Логгер</param>
         /// <param name="footballClubDbContext">Контекст базы данных футбольного клуба</param>
         /// <param name="localizer">Локализатор.</param>
-        /// <param name="informationSchemaContext">Контекст базы данных схемы объектов</param>
         /// <param name="configuration">Конфигурация</param>
         public FootballClubBaseController(IStringLocalizer<TController> localizer, ILogger<TController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration)
         {
-            Localizer = localizer;
+            Initialize(localizer, logger, configuration);
             FootballClubDbContext = footballClubDbContext;
-            Logger = logger;
+        }
+
+        /// <summary>
+        /// Инициализирует контекст базы данных схем объектов, контекст базы данных внешних ключей,
+        /// логгер, конфигурацию и локализатор.
+        /// </summary>
+        /// <param name="logger">Логгер</param>
+        /// <param name="informationSchemaContext">Контекст базы данных схем объектов</param>
+        /// <param name="keyColumnUsageContext">Контекст базы данных внешних ключей</param>
+        /// <param name="localizer">Локализатор.</param>
+        /// <param name="configuration">Конфигурация</param>
+        public FootballClubBaseController(IStringLocalizer<TController> localizer, ILogger<TController> logger,
+            InformationSchemaContext informationSchemaContext, KeyColumnUsageContext keyColumnUsageContext, IConfiguration configuration)
+        {
+            Initialize(localizer, logger, configuration);
             InformationSchemaContext = informationSchemaContext;
-            Configuration = configuration;
+            KeyColumnUsageContext = keyColumnUsageContext;
         }
 
         /// <summary>
@@ -116,6 +134,19 @@ namespace FootballClub.Controllers
             {
                 throw new ArgumentNullException("Entity can not be null");
             }
+        }
+
+        /// <summary>
+        /// Инициализирует базовый контроллер.
+        /// </summary>
+        /// <param name="localizer">Локализатор</param>
+        /// <param name="logger">Логгер</param>
+        /// <param name="configuration">Конфигуратор</param>
+        private void Initialize(IStringLocalizer<TController> localizer, ILogger<TController> logger, IConfiguration configuration)
+        {
+            Localizer = localizer;
+            Logger = logger;
+            Configuration = configuration;
         }
     }
 }

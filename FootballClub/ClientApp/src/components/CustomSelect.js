@@ -17,14 +17,9 @@ export default function CustomSelect(props) {
             throw new Error("Column name is not defined");
         }
 
-        if (!columnName.endsWith("Id")) {
-            throw new Error("This column is not lookup (does not end on \"Id\")");
-        }
-
-        const entityName = columnName.replace("Id", "");
         const selectedId = props.selected;
 
-        let response = await fetch(`/${entityName}/GetEntityOptions?from=${from}&count=${count}`);
+        let response = await fetch(`/${props.entityName}/GetEntityOptions?from=${from}&count=${count}`);
         let options = await response.json();
 
         const mappedOptions = options.map((option) => {

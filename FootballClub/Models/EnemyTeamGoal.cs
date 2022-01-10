@@ -8,6 +8,6 @@ namespace FootballClub.Models
 
         public string TouchdownPassFrom { get; set; }
 
-        public Guid? OwnGoalPlayer { get; set; }
+        public Guid? OwnGoalPlayerId { get; set; }
     }
 }

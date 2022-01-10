@@ -38,6 +38,10 @@ namespace FootballClub
             services.AddDbContext<InformationSchemaContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("InformationSchema"),
                     new MySqlServerVersion(new Version(8, 0, 11))));
+
+            services.AddDbContext<KeyColumnUsageContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("InformationSchema"),
+                    new MySqlServerVersion(new Version(8, 0, 11))));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,14 +5,15 @@ import CardPageDatepicker from '../CardPageDatepicker';
 import React from 'react';
 
 import * as EntityProvider from '../Providers/EntityProvider';
+import * as SchemaProvider from '../Providers/SchemaProvider';
 import * as UrlParser from '../UrlParser';
 
-export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputClick) {
+export async function getMappedInputsBySchema(schema, entity, skipPersonId, onInputClick) {
     validateSchema(schema);
 
-    let mappedInputs = schema.map(column => {
+    let mappedInputs = await Promise.all(schema.map(async column => {
 
-        const dataBaseColumnName = column.dataBaseColumnName;
+        const dataBaseColumnName = column.columnName;
         const dataBaseDataType = column.dataType;
 
         const skip = (dataBaseColumnName === "Id") || ((dataBaseColumnName === "PersonId") && (skipPersonId));
@@ -25,7 +26,7 @@ export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputCli
         let inputComponent;
 
         if (dataBaseColumnName.includes("Phone")) {
-            inputComponent =
+            inputComponent = 
                 <InputMask
                     mask="+\7(999)999 99 99"
                     maskChar=" " type="text"
@@ -35,12 +36,16 @@ export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputCli
                     name={dataBaseColumnName}
                     onClick={onInputClick} />;
         } else if (dataBaseColumnName.endsWith("Id")) {
+            let referencedEntityName = await SchemaProvider.getReferencedEntity(column.tableName, dataBaseColumnName);
+
             inputComponent =
                 <div type="text" className="input-group-prepend custom-input-group-prepend" name={dataBaseColumnName}>
                     <CustomSelect
                         columnName={dataBaseColumnName}
                         selected={columnValue}
-                        onClick={onInputClick} />
+                        onClick={onInputClick}
+                        entityName={referencedEntityName}
+                    />
                 </div>
         } else if (dataBaseDataType === "datetime") {
             if (columnValue) {
@@ -59,14 +64,14 @@ export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputCli
             if (columnValue) {
                 options =
                     <>
-                    <option selected value={true}>Да</option>
-                    <option value={false}>Нет</option>
+                        <option selected value={true}>Да</option>
+                        <option value={false}>Нет</option>
                     </>
             } else {
                 options =
                     <>
-                    <option value={true}>Да</option>
-                    <option selected value={false}>Нет</option>
+                        <option value={true}>Да</option>
+                        <option selected value={false}>Нет</option>
                     </>
             }
 
@@ -77,7 +82,7 @@ export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputCli
                     </select>
                 </div>
         } else {
-            inputComponent =
+            inputComponent = 
                 <input type="text" className="form-control" name={dataBaseColumnName}
                     aria-describedby="inputGroup-sizing-sm"
                     defaultValue={columnValue}
@@ -91,7 +96,7 @@ export function getMappedInputsBySchema(schema, entity, skipPersonId, onInputCli
                 inputComponent={inputComponent}
             />
         );
-    });
+    }));
 
     return mappedInputs;
 }

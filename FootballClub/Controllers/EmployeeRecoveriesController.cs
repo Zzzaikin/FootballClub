@@ -14,8 +14,8 @@ namespace FootballClub.Controllers
     public class EmployeeRecoveriesController : FootballClubBaseController<EmployeeRecoveriesController>, IEntityController<EmployeeRecovery>
     {
         public EmployeeRecoveriesController(IStringLocalizer<EmployeeRecoveriesController> localizer, ILogger<EmployeeRecoveriesController> logger,
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
-            : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration) 
+            : base(localizer, logger, footballClubDbContext, configuration)
         { }
 
         [HttpGet("GetEmptyEntity")]

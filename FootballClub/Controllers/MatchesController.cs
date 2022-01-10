@@ -14,8 +14,8 @@ namespace FootballClub.Controllers
     public class MatchesController : FootballClubBaseController<MatchesController>, IEntityController<Match>
     {
         public MatchesController(IStringLocalizer<MatchesController> localizer, ILogger<MatchesController> logger, 
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration) 
-            : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration) 
+            : base(localizer, logger, footballClubDbContext, configuration)
         { }
 
         [HttpGet("GetEmptyEntity")]

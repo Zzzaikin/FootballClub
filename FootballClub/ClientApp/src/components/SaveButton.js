@@ -3,7 +3,6 @@ import $ from 'jquery';
 
 import * as UrlParser from './UrlParser';
 import * as SchemaProvider from './Providers/SchemaProvider';
-import * as EntityProvider from './Providers/EntityProvider';
 
 export default function SaveButton(props) {
 

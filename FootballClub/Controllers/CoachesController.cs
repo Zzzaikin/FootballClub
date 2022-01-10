@@ -14,11 +14,11 @@ namespace FootballClub.Controllers
     public class CoachesController : FootballClubBaseController<CoachesController>, IEntityController<Coach>
     {
         public CoachesController(IStringLocalizer<CoachesController> localizer, ILogger<CoachesController> logger, 
-            FootballClubDbContext footballClubDbContext, InformationSchemaContext informationSchemaContext, IConfiguration configuration)
-            : base(localizer, logger, footballClubDbContext, informationSchemaContext, configuration)
+            FootballClubDbContext footballClubDbContext, IConfiguration configuration)
+            : base(localizer, logger, footballClubDbContext, configuration)
         { }
 
-        [HttpGet("GetEmptyEntity")]
+    [HttpGet("GetEmptyEntity")]
         public Coach GetEmptyEntity()
         {
             return new Coach();
