@@ -9,5 +9,7 @@ namespace FootballClub.Models
         public Guid? TouchdownPassPlayerId { get; set; }
 
         public string OwnGoalPlayerName { get; set; }
+
+        public bool WithPenalty { get; set; }
     }
 }
