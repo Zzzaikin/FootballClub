@@ -225,4 +225,7 @@
   <data name="TournamentId" xml:space="preserve">
     <value>Турнир</value>
   </data>
+  <data name="Experience" xml:space="preserve">
+    <value>Опыт работы</value>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using FootballClub.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -106,6 +107,74 @@ namespace FootballClub.Controllers
                 select ourTeamGoal;
 
             return Ok(ourTeamGoalsByMatchId);
+        }
+
+        [HttpGet("GetTop5BestScorers")]
+        public IActionResult GetTop5BestScorers(string tournamentName, DateTime startDate, DateTime endDate)
+        {
+            if (string.IsNullOrEmpty(tournamentName))
+            {
+                throw new ArgumentException("Tournament name can not be null or empty");
+            }
+
+            if (startDate > endDate)
+            {
+                throw new ArgumentException("Incorrect dates. Start date must be less end date");
+            }
+
+            var groupedOurTeamGoals =
+                from ourTeamGoal in FootballClubDbContext.OurTeamGoals
+
+                join match in FootballClubDbContext.Matches
+                on ourTeamGoal.MatchId equals match.Id
+                into matches
+
+                from match in matches.DefaultIfEmpty()
+
+                join tournament in FootballClubDbContext.Tournaments
+                on match.TournamentId equals tournament.Id
+                into tournaments
+
+                from tournament in tournaments.DefaultIfEmpty()
+
+                where 
+                    (tournament.Name == tournamentName) &&
+                    (tournament.StartDate == startDate) &&
+                    (tournament.EndDate == endDate)
+
+                group ourTeamGoal by ourTeamGoal.AuthorPlayerId
+                into teamGoalsByAuthorPlayerId
+
+                select new
+                {
+                    RecordCount = teamGoalsByAuthorPlayerId.Count(),
+                    AuthorPlayerId = teamGoalsByAuthorPlayerId.Key
+                };
+
+            var bestScorers =
+                from bestScorer in groupedOurTeamGoals.Take(5)
+
+                join player in FootballClubDbContext.Players
+                on bestScorer.AuthorPlayerId equals player.Id
+                into bestScorersPlayers
+
+                from bestScorersPlayer in bestScorersPlayers.DefaultIfEmpty()
+
+                join person in FootballClubDbContext.Persons
+                on bestScorersPlayer.PersonId equals person.Id
+                into bestScorersPersons
+
+                from bestScorersPerson in bestScorersPersons.DefaultIfEmpty()
+
+                orderby bestScorer.RecordCount descending
+
+                select new
+                {
+                    GoalsCount = bestScorer.RecordCount,
+                    PlayerName = bestScorersPerson.Name
+                };
+
+            return Ok(bestScorers);
         }
     }
 }

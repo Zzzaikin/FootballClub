@@ -6,6 +6,7 @@ import MatchesMiniDashboard from './MatchesMiniDashboard';
 import Section from './Section';
 import EntityContent from './EntityContent';
 import GoalsContent from './GoalsContent';
+import BestPlayers from './BestPlayers';
 
 function Content() {
     return (
@@ -37,6 +38,7 @@ function Content() {
             <Route path='/InsertEmployeeRecoveries' render={() => <CardPage content={<EntityContent skipPersonId={false} insertingMode={true} />} />} />
             <Route path='/InsertMatches' render={() => <CardPage content={<EntityContent skipPersonId={true} insertingMode={true} />} />} />
             <Route path='/InsertDisqualifications' render={() => <CardPage content={<EntityContent skipPersonId={false} insertingMode={true} />} />} />
+            <Route path='/BestPlayers' component={BestPlayers} />
             <Redirect from={"/"} to={"/PlayersSection"} />
         </div>
     );

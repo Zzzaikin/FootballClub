@@ -13,6 +13,7 @@ function LeftNav() {
                 <BootstrapNavbarBrand label="Взыскания" id="EmployeeRecoveriesSection" isNavItemActive={false} goToSection={setRedirect}/>
                 <BootstrapNavbarBrand label="Матчи" id="MatchesSection" isNavItemActive={false} goToSection={setRedirect}/>
                 <BootstrapNavbarBrand label="Дисквалификации" id="DisqualificationsSection" isNavItemActive={false} goToSection={setRedirect}/>
+                <BootstrapNavbarBrand label="Лучшие бомбардиры" id="BestPlayers" isNavItemActive={false} goToSection={setRedirect} />
             </div>
             {redirect}
         </div>

@@ -14,5 +14,7 @@ namespace FootballClub.Models
         public Person Person { get; set; }
 
         public float HoursPayment { get; set; }
+
+        public int Experience { get; set; }
     }
 }

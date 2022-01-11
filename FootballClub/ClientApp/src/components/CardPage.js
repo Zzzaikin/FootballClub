@@ -20,7 +20,7 @@ export default function CardPage(props) {
         <div className="card-main-container">
             <div className="card-top-container">
                 <div className="buttons-container">
-                    <SaveButton goToSection={goToSection} insertingMode={props.content.props.insertingMode}/>
+                    <SaveButton goToSection={goToSection} insertingMode={props.content.props.insertingMode} skipPersonId={props.content.props.skipPersonId} />
                     <button type="button" className="btn btn-primary" id="canselButton" onClick={goToSection}>Отмена</button>
                 </div>
             </div>

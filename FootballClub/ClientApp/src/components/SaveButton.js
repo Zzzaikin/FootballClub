@@ -3,21 +3,35 @@ import $ from 'jquery';
 
 import * as UrlParser from './UrlParser';
 import * as SchemaProvider from './Providers/SchemaProvider';
+import * as EntityProvider from './Providers/EntityProvider';
 
 export default function SaveButton(props) {
 
-    function getDataFromForm(entityName) {
+    function getDataFromForm(entityName, personId) {
         SchemaProvider.validateEntityName(entityName);
 
+        const insertingMode = props.insertingMode;
+
         let entity = $(`#${entityName}-info-form`).serializeArray().reduce((obj, item) => {
+            const itemName = item.name;
+
+            const isNeedSetNull =
+                (insertingMode) || ((itemName === "PersonId") && (!props.skipPersonId))
+
+            if (isNeedSetNull)
+                item.value = null;
+
             if (item.value === "false")
                 item.value = false;
             else if (item.value === "true")
                 item.value = true;
 
-            obj[item.name] = item.value;
+            obj[itemName] = item.value;
             return obj;
         }, {});
+
+        if ((personId) && (!insertingMode))
+            entity.personId = personId;
 
         return entity
     }
@@ -25,15 +39,23 @@ export default function SaveButton(props) {
     async function save() {
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
         const entityId = UrlParser.getEntityIdFromUrlForCardPage();
+        const insertingMode = props.insertingMode;
 
-        let entity = getDataFromForm(entityName);
+        let entityFromDb;
+
+        if (!insertingMode)
+            entityFromDb = await EntityProvider.getEntity(entityName, entityId);
+
+        let entity = getDataFromForm(entityName, entityFromDb?.person?.id);
         let person = getDataFromForm('Persons');
 
-        if (!props.insertingMode)
+        if (!insertingMode)
             entity.Id = entityId;
 
-        if (Object.keys(person).length !== 0)
+        if (Object.keys(person).length !== 0) {
+            person.id = entityFromDb.person.id;
             entity.person = person;
+        }
 
         const action = props.insertingMode ? "Insert" : "Update";
 
