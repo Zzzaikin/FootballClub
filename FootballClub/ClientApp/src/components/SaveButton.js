@@ -6,54 +6,71 @@ import * as SchemaProvider from './Providers/SchemaProvider';
 import * as EntityProvider from './Providers/EntityProvider';
 
 export default function SaveButton(props) {
+    async function normalizeSerializedArray(serializedArray, entityName, personId) {
+        if (!serializedArray) {
+            throw new Error("Serialized array is not defined");
+        }
 
-    function getDataFromForm(entityName, personId) {
         SchemaProvider.validateEntityName(entityName);
 
-        const insertingMode = props.insertingMode;
+        let entitySchema = await SchemaProvider.getSchema(entityName);
+        let entityId;
+        let entity;
 
-        let entity = $(`#${entityName}-info-form`).serializeArray().reduce((obj, item) => {
-            const itemName = item.name;
+        if (entityName === "Persons")
+            entityId = personId;
+        else
+            entityId = UrlParser.getEntityIdFromUrlForCardPage();
 
-            const isNeedSetNull =
-                (insertingMode) || ((itemName === "PersonId") && (!props.skipPersonId))
 
-            if (isNeedSetNull)
-                item.value = null;
+        if (props.insertingMode)
+            entity = await EntityProvider.getEmptyEntity(entityName);
+        else
+            entity = await EntityProvider.getEntity(entityName, entityId);
 
-            if (item.value === "false")
-                item.value = false;
-            else if (item.value === "true")
-                item.value = true;
+        await entitySchema.forEach(column => {
+            const dataBaseColumnName = column.dataBaseColumnName;
+            const columnName = dataBaseColumnName[0].toLowerCase() + dataBaseColumnName.slice(1);
+            const columnDataType = column.dataType;
 
-            obj[itemName] = item.value;
-            return obj;
-        }, {});
+            const columnInSerializedArray = serializedArray.find(item => item.name === dataBaseColumnName);
 
-        if ((personId) && (!insertingMode))
-            entity.personId = personId;
+            if (columnInSerializedArray) {
+                let columnValueInSerializedArray = columnInSerializedArray.value;
 
-        return entity
+                if (!columnValueInSerializedArray) {
+                    columnValueInSerializedArray = null;
+                }
+
+                const isBoolean = (columnValueInSerializedArray !== null) && (columnDataType === "tinyint");
+
+                if (isBoolean) {
+                    columnValueInSerializedArray = columnValueInSerializedArray === "Да" ? true : false;
+                }
+
+                entity[`${columnName}`] = columnValueInSerializedArray;
+            }
+        });
+
+        return entity;
     }
 
     async function save() {
         const entityName = UrlParser.getEntityNameFromUrlForCardPage();
-        const entityId = UrlParser.getEntityIdFromUrlForCardPage();
-        const insertingMode = props.insertingMode;
 
-        let entityFromDb;
+        let entitySerializedInArray = $(`#${entityName}-info-form`).serializeArray();
+        let personSerializedInArray = $('#Persons-info-form').serializeArray();
 
-        if (!insertingMode)
-            entityFromDb = await EntityProvider.getEntity(entityName, entityId);
+        let entity = await normalizeSerializedArray(entitySerializedInArray, entityName);
 
-        let entity = getDataFromForm(entityName, entityFromDb?.person?.id);
-        let person = getDataFromForm('Persons');
+        if (personSerializedInArray.length > 0) {
+            let personId;
 
-        if (!insertingMode)
-            entity.Id = entityId;
+            if (!props.insertingMode) {
+                personId = entity.person.id;
+            }
 
-        if (Object.keys(person).length !== 0) {
-            person.id = entityFromDb.person.id;
+            let person = await normalizeSerializedArray(personSerializedInArray, "Persons", personId);
             entity.person = person;
         }
 

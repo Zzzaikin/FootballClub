@@ -342,3 +342,4 @@ healthchecksdb
 /FootballClub/LogicalOperation.cs
 /FootballClub/Controllers/IEntityController.cs
 /Dump20220109.sql
+/FootballClub/Models/BestTournamentResultQuery.cs
