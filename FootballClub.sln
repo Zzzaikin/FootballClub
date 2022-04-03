@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballClub", "FootballClub\FootballClub.csproj", "{2242DE84-CB40-4838-8B76-30378768F88E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballClub", "FootballClub\FootballClub.csproj", "{2242DE84-CB40-4838-8B76-30378768F88E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataManager", "DataManager\DataManager.csproj", "{DEBECC38-0AB5-4305-968B-1ABEF8D9749C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{CE0665B4-C3E9-41C1-B7F3-9EB072DF1850}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{2242DE84-CB40-4838-8B76-30378768F88E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2242DE84-CB40-4838-8B76-30378768F88E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2242DE84-CB40-4838-8B76-30378768F88E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEBECC38-0AB5-4305-968B-1ABEF8D9749C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEBECC38-0AB5-4305-968B-1ABEF8D9749C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEBECC38-0AB5-4305-968B-1ABEF8D9749C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEBECC38-0AB5-4305-968B-1ABEF8D9749C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0665B4-C3E9-41C1-B7F3-9EB072DF1850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE0665B4-C3E9-41C1-B7F3-9EB072DF1850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE0665B4-C3E9-41C1-B7F3-9EB072DF1850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE0665B4-C3E9-41C1-B7F3-9EB072DF1850}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
