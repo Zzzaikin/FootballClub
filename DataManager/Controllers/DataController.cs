@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using Common.Argument;
-using Microsoft.Extensions.Localization;
 using MySql.Data.MySqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
-using DataManager.Enums;
 using System.Threading.Tasks;
+using System.Linq;
+using DataManager.Extensions;
+using System.Text;
+using QueryPush.Queries;
+using QueryPush.Models.QueryModels;
+using QueryPush;
 
 namespace DataManager.Controllers
 {
@@ -22,26 +26,28 @@ namespace DataManager.Controllers
 
         private MySqlConnection _footballClubConnection;
 
+        private ConnectionManager _connectionManager;
+
+        private string _footballClubConnectionString { get => _configuration.GetConnectionString("FootballClub"); }
+
         public DataController(IConfiguration configuration)
         {
             _configuration = configuration;
-            OpenConnection();
+
+            _connectionManager = ConnectionManager.GetInstance(_footballClubConnectionString);
+            _connectionManager.OpenConnection();
         }
 
         ~DataController()
         {
-            if (_footballClubConnection.State == ConnectionState.Open)
-            {
-                _footballClubConnection.Close();
-            }
+            _connectionManager.CloseConnection();
         }
 
         [HttpDelete("DeleteEntity")]
         public IActionResult DeleteEntity(string entityName, Guid entityId)
         {
-            Argument.StringNotNullOrEmpty(entityName, nameof(entityName));
+            Argument.ValidateStringByAllPolicies(entityName, nameof(entityName));
             Argument.GuidNotEmpty(entityId, nameof(entityId));
-            Argument.StringNotContainsSqlInjections(entityName, nameof(entityName));
 
             var sqlExpression =
                 $"DELETE FROM {entityName} " +
@@ -51,36 +57,29 @@ namespace DataManager.Controllers
 
             sqlCommand.Parameters.AddWithValue("@id", entityId);
 
-            var queryExecutionResult = PushQuery(sqlCommand, Execute.NonQueryAsync);
-            return queryExecutionResult.Result;
+            var queryExecution = ExecuteNonQueryAsync(sqlCommand);
+            return queryExecution.Result;
         }
 
         [HttpGet("GetCountOfEntityRecords")]
         public IActionResult GetCountOfEntityRecords(string entityName)
         {
-            Argument.StringNotNullOrEmpty(entityName, nameof(entityName));
-            Argument.StringNotContainsSqlInjections(entityName, nameof(entityName));
+            Argument.ValidateStringByAllPolicies(entityName, nameof(entityName));
 
             var sqlExpression = $"SELECT COUNT(*) FROM {entityName}";
             var sqlCommand = new MySqlCommand(sqlExpression, _footballClubConnection);
-            var queryExecutionResult = PushQuery(sqlCommand, Execute.ReaderAsync);
+            var queryExecution = GetCountAsync(sqlCommand);
 
-            return queryExecutionResult.Result;
+            return queryExecution.Result;
         }
 
-        public IActionResult GetEntities(string entityName, int from = 0, int count = 100)
+        [HttpPost("GetEntities")]
+        public IActionResult GetEntities([FromBody] SelectQueryModel selectQueryModel)
         {
-            throw new NotImplementedException();
-        }
+            var selectQuery = new SelectQuery(_footballClubConnectionString, _connectionManager.Connection, selectQueryModel);
+            var data = selectQuery.PushAsync();
 
-        public IActionResult GetEntitiesOptions(string entityName, string columnName, int from = 0, int count = 100)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IActionResult GetEntityById(string entityName, Guid id)
-        {
-            throw new NotImplementedException();
+            return Ok(data.Result.Records);
         }
 
         public IActionResult GetEntitySchema(string entityName)
@@ -98,46 +97,98 @@ namespace DataManager.Controllers
             throw new NotImplementedException();
         }
 
-        private async Task<IActionResult> PushQuery(MySqlCommand sqlCommand, Execute execute)
+        public IActionResult GetReferencedTableName(string entityName, string columnName)
         {
-            switch (execute)
+            throw new NotImplementedException();
+        }
+
+        private string GetColumnsString(List<string> columns)
+        {
+            if (columns.Count == 0)
             {
-                case Execute.NonQueryAsync:
+                columns.Add("*");
+                return columns[0];
+            }
 
-                    try
+            return string.Join(", ", columns);
+        }
+
+        private IActionResult GetProblemActionResult(string message, Exception ex)
+        {
+            Argument.StringNotNullOrEmpty(message, nameof(message));
+
+            return Problem(
+                    title: "Непредвиденная ошибка во время выполнения запроса к базе данных.",
+                    detail: ex.ToString(),
+                    statusCode: 500);
+        }
+
+        private async Task<IActionResult> GetColumnNamesWithValuesAsync(MySqlCommand sqlCommand)
+        {
+            try
+            {
+                var dataTable = new DataTable();
+                var dataAdapter = new MySqlDataAdapter(sqlCommand);
+
+                await dataAdapter.FillAsync(dataTable);
+
+                var columns = dataTable.Columns;
+                var rows = dataTable.Rows;
+
+                var columnNamesWithValues = new List<Dictionary<string, object>>();
+
+                for (var i = 0; i < rows.Count; i++)
+                {
+                    var columnNameWithValue = new Dictionary<string, object>();
+
+                    for (var j = 0; j < columns.Count; j++)
                     {
-                        var count = await sqlCommand.ExecuteNonQueryAsync();
-                        return Ok(count);
+                        var columnName = columns[j].ColumnName;
+                        var columnValue = rows[i][columnName];
+
+                        columnNameWithValue.Add(columnName, columnValue);
                     }
 
-                    catch (Exception ex)
-                    {
-                        return Problem(
-                            title: "Непредвиденная ошибка во время выполнения запроса к базе данных.",
-                            detail: ex.ToString(),
-                            statusCode: 500);
-                    }
+                    columnNamesWithValues.Add(columnNameWithValue);
+                }
 
-                case Execute.ReaderAsync:
+                return Ok(columnNamesWithValues);
+            }
 
-                    try
-                    {
-                        using var reader = await sqlCommand.ExecuteReaderAsync();
-                        reader.Read();
-                        var count = reader.GetValue(0);
-                        return Ok(count);
-                    }
-                    
-                    catch(Exception ex)
-                    {
-                        return Problem(
-                            title: "Непредвиденная ошибка во время выполнения запроса к базе данных.",
-                            detail: ex.ToString(),
-                            statusCode: 500);
-                    }
+            catch (Exception ex)
+            {
+                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
+            }
+        }
 
-                default:
-                    throw new NotImplementedException("Нет поведения для такого значения перечисления Execute.");
+        private async Task<IActionResult> GetCountAsync(MySqlCommand sqlCommand)
+        {
+            try
+            {
+                using var reader = await sqlCommand.ExecuteReaderAsync();
+                reader.Read();
+                var count = reader.GetValue(0);
+
+                return Ok(count);
+            }
+
+            catch (Exception ex)
+            {
+                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
+            }
+        }
+
+        private async Task<IActionResult> ExecuteNonQueryAsync(MySqlCommand sqlCommand)
+        {
+            try
+            {
+                var count = await sqlCommand.ExecuteNonQueryAsync();
+                return Ok(count);
+            }
+
+            catch (Exception ex)
+            {
+                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
             }
         }
 
@@ -152,9 +203,5 @@ namespace DataManager.Controllers
             }
         }
 
-        public IActionResult GetReferencedTableName(string entityName, string columnName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

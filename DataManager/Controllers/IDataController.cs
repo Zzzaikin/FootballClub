@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QueryPush.Models.QueryModels;
 using System;
 using System.Collections.Generic;
 
@@ -57,30 +58,10 @@ namespace DataManager.Controllers
         IActionResult DeleteEntity(string entityName, Guid entityId);
 
         /// <summary>
-        /// Возвращает сущность по идентификатору.
-        /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <param name="id">Идентификатор сущности.</param>
-        /// <returns>Статус выполнения запроса с сущностью, найденной по идентификатору.</returns>
-        IActionResult GetEntityById(string entityName, Guid id);
-
-        /// <summary>
-        /// Возвращает объект options для отображения сущности в select.
-        /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <param name="columnName">Название колонки, значение которой будет возвращено для отображения в select.</param>
-        /// <param name="from">Параметр "От"</param>
-        /// <param name="count">Параметр "Количество"</param>
-        /// <returns>Результат выполнения запроса с объектом options.</returns>
-        IActionResult GetEntitiesOptions(string entityName, string columnName, int from = 0, int count = 100);
-
-        /// <summary>
         /// Возвращает сущности на указанном интервале.
         /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <param name="from">Параметр выборки "От"</param>
-        /// <param name="count">Параметр определяющий количество получемых записей</param>
+        /// <param name="selectQueryModel">Тело запроса на Select.</param>
         /// <returns>Сущности со статусом запроса.</returns>
-        IActionResult GetEntities(string entityName, int from = 0, int count = 100);
+        IActionResult GetEntities(SelectQueryModel selectQueryModel);
     }
 }
