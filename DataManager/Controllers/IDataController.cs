@@ -31,7 +31,7 @@ namespace DataManager.Controllers
         /// </summary>
         /// <param name="entityName">Название сущности.</param>
         /// <returns>Статус выполнения запроса с количеством записей игроков.</returns>
-        IActionResult GetCountOfEntityRecords(string entityName);
+        IActionResult GetCountOfEntityRecords(BaseQueryModel baseQueryModel);
 
         /// <summary>
         /// Добавляет сущность.
@@ -55,7 +55,7 @@ namespace DataManager.Controllers
         /// <param name="entityName">Название удаляемой сущности.</param>
         /// <param name="entityId">Идентификатор удаляемой сущности.</param>
         /// <returns>Результат выполнения запроса.</returns>
-        IActionResult DeleteEntity(string entityName, Guid entityId);
+        IActionResult DeleteEntity(BaseQueryModel baseQueryModel);
 
         /// <summary>
         /// Возвращает сущности на указанном интервале.

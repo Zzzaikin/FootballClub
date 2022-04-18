@@ -4,6 +4,7 @@ using QueryPush.Enums;
 using QueryPush.Models;
 using QueryPush.Models.QueryModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +13,9 @@ namespace QueryPush.Queries
 {
     public abstract class BaseQuery<TQueryModel> where TQueryModel : BaseQueryModel
     {
-        private string _connectionString;
-
-        public BaseQuery(string connectionString, MySqlConnection connection, TQueryModel queryModel)
+        public BaseQuery(MySqlConnection connection, TQueryModel queryModel)
         {
-            Argument.StringNotNullOrEmpty(connectionString, nameof(connectionString));
-            _connectionString = connectionString;
             Connection = connection;
-
             Parse(queryModel);
         }
 
@@ -45,8 +41,18 @@ namespace QueryPush.Queries
             return new DataResult { AffectedRows = count };
         }
 
-        protected void SetColumns(List<Column> columns)
+        protected internal virtual void SetFrom(TQueryModel queryModel)
         {
+            var stringBuilder = new StringBuilder(SqlExpression);
+            stringBuilder.Append($"FROM {queryModel.EntityName} AS {queryModel.EntityName}");
+            SqlExpression = stringBuilder.ToString();
+        }
+
+        protected internal virtual void SetColumns(TQueryModel queryModel)
+        {
+            Argument.NotNull(queryModel, nameof(queryModel));
+
+            var columns = queryModel.Columns;
             var stringBuilder = new StringBuilder(SqlExpression);
 
             if ((columns == null) || (columns.Count == 0))
@@ -76,8 +82,11 @@ namespace QueryPush.Queries
             SqlExpression = stringBuilder.ToString();
         }
 
-        protected void SetJoins(List<Join> joins)
+        protected internal virtual void SetJoins(TQueryModel queryModel)
         {
+            Argument.NotNull(queryModel, nameof(queryModel));
+            var joins = queryModel.Joins;
+
             if ((joins == null) || (joins.Count == 0))
                 return;
 
@@ -92,8 +101,11 @@ namespace QueryPush.Queries
             SqlExpression = stringBuilder.ToString();
         }
 
-        protected void SetFilters(List<Filter> filters)
+        protected internal virtual void SetFilters(TQueryModel queryModel)
         {
+            Argument.NotNull(queryModel, nameof (queryModel));
+            var filters = queryModel.Filters;
+
             if ((filters == null) || (filters.Count == 0))
                 return;
 
@@ -108,28 +120,14 @@ namespace QueryPush.Queries
             {
                 var comparisonType = string.Empty;
 
-                switch (filter.ComparisonType)
+                comparisonType = filter.ComparisonType switch
                 {
-                    case ComparisonType.Equal:
-                        comparisonType = " = ";
-                        break;
-
-                    case ComparisonType.NotEqual:
-                        comparisonType = " != ";
-                        break;
-
-                    case ComparisonType.NotNull:
-                        comparisonType = " NOT NULL ";
-                        break;
-
-                    case ComparisonType.IsNull:
-                        comparisonType = " IS NULL ";
-                        break;
-
-                    default:
-                        throw new NotImplementedException($"Тип сравнения {filter.ComparisonType} не реализован.");
-
-                }
+                    ComparisonType.Equal => " = ",
+                    ComparisonType.NotEqual => " != ",
+                    ComparisonType.NotNull => " NOT NULL ",
+                    ComparisonType.IsNull => " IS NULL ",
+                    _ => throw new NotImplementedException($"Тип сравнения {filter.ComparisonType} не реализован."),
+                };
 
                 var stub = stubs[index];
 
@@ -153,15 +151,15 @@ namespace QueryPush.Queries
             }
         }
 
-        internal abstract void Parse(TQueryModel queryModel);
+        protected internal abstract void Parse(TQueryModel queryModel);
 
-        private List<string> GetStubs(List<Filter> filters)
+        protected internal List<string> GetStubs(IEnumerable items)
         {
             var stubs = new List<string>();
 
             var stubIndex = 0;
 
-            foreach (var filter in filters)
+            foreach (var filter in items)
             {
                 var stub = $"@{stubIndex}";
 

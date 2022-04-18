@@ -11,23 +11,7 @@ namespace QueryPush.Queries
 {
     public class SelectQuery : BaseQuery<SelectQueryModel>
     {
-        public SelectQuery(string connectionString, MySqlConnection connection, SelectQueryModel selectQueryModel) 
-            : base(connectionString, connection, selectQueryModel) { }
-
-        internal override void Parse(SelectQueryModel selectQueryModel)
-        {
-            SqlExpression = "SELECT";
-
-            SetColumns(selectQueryModel.Columns);
-
-            var stringBuilder = new StringBuilder(SqlExpression);
-            stringBuilder.Append($"FROM {selectQueryModel.EntityName} AS {selectQueryModel.EntityName}");
-            SqlExpression = stringBuilder.ToString();
-
-            SetJoins(selectQueryModel.Joins);
-            SetFilters(selectQueryModel.Filters);
-            SetPage(selectQueryModel.Count, selectQueryModel.From);
-        }
+        public SelectQuery(MySqlConnection connection, SelectQueryModel selectQueryModel) : base(connection, selectQueryModel) { }
 
         public override DataResult Push()
         {
@@ -51,6 +35,17 @@ namespace QueryPush.Queries
 
             var columnNamesWithValues = GetDictionaryCollectionFromDataTable(dataTable);
             return new DataResult { Records = columnNamesWithValues };
+        }
+
+        protected internal override void Parse(SelectQueryModel selectQueryModel)
+        {
+            SqlExpression = "SELECT";
+
+            SetColumns(selectQueryModel);
+            SetFrom(selectQueryModel);
+            SetJoins(selectQueryModel);
+            SetFilters(selectQueryModel);
+            SetPage(selectQueryModel.Count, selectQueryModel.From);
         }
 
         private void SetPage(int count, int from)

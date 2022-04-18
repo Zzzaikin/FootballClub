@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QueryPush.Models.QueryModels
 {
-    public abstract class BaseQueryModel
+    public class BaseQueryModel
     {
         private string _entityName;
 

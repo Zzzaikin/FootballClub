@@ -6,9 +6,6 @@ using MySql.Data.MySqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Threading.Tasks;
-using System.Linq;
-using DataManager.Extensions;
-using System.Text;
 using QueryPush.Queries;
 using QueryPush.Models.QueryModels;
 using QueryPush;
@@ -24,9 +21,9 @@ namespace DataManager.Controllers
     {
         private IConfiguration _configuration;
 
-        private MySqlConnection _footballClubConnection;
+        private MySqlConnection _footballClubConnection => _footballClubConnectionManager.Connection;
 
-        private ConnectionManager _connectionManager;
+        private ConnectionManager _footballClubConnectionManager;
 
         private string _footballClubConnectionString { get => _configuration.GetConnectionString("FootballClub"); }
 
@@ -34,52 +31,40 @@ namespace DataManager.Controllers
         {
             _configuration = configuration;
 
-            _connectionManager = ConnectionManager.GetInstance(_footballClubConnectionString);
-            _connectionManager.OpenConnection();
+            _footballClubConnectionManager = ConnectionManager.GetInstance(_footballClubConnectionString);
+            _footballClubConnectionManager.OpenConnection();
         }
 
         ~DataController()
         {
-            _connectionManager.CloseConnection();
+            _footballClubConnectionManager.CloseConnection();
         }
 
-        [HttpDelete("DeleteEntity")]
-        public IActionResult DeleteEntity(string entityName, Guid entityId)
+        [HttpPost("DeleteEntity")]
+        public IActionResult DeleteEntity([FromBody] BaseQueryModel baseQueryModel)
         {
-            Argument.ValidateStringByAllPolicies(entityName, nameof(entityName));
-            Argument.GuidNotEmpty(entityId, nameof(entityId));
+            var deleteQuery = new DeleteQuery(_footballClubConnection, baseQueryModel);
+            var result = deleteQuery.PushAsync().Result;
 
-            var sqlExpression =
-                $"DELETE FROM {entityName} " +
-                "WHERE Id = @id";
-
-            var sqlCommand = new MySqlCommand(sqlExpression, _footballClubConnection);
-
-            sqlCommand.Parameters.AddWithValue("@id", entityId);
-
-            var queryExecution = ExecuteNonQueryAsync(sqlCommand);
-            return queryExecution.Result;
+            return Ok(result);
         }
 
-        [HttpGet("GetCountOfEntityRecords")]
-        public IActionResult GetCountOfEntityRecords(string entityName)
+        [HttpPost("GetCountOfEntityRecords")]
+        public IActionResult GetCountOfEntityRecords([FromBody] BaseQueryModel baseQueryModel)
         {
-            Argument.ValidateStringByAllPolicies(entityName, nameof(entityName));
+            var countQuery = new CountQuery(_footballClubConnection, baseQueryModel);
+            var result = countQuery.PushAsync().Result;
 
-            var sqlExpression = $"SELECT COUNT(*) FROM {entityName}";
-            var sqlCommand = new MySqlCommand(sqlExpression, _footballClubConnection);
-            var queryExecution = GetCountAsync(sqlCommand);
-
-            return queryExecution.Result;
+            return Ok(result);
         }
 
         [HttpPost("GetEntities")]
         public IActionResult GetEntities([FromBody] SelectQueryModel selectQueryModel)
         {
-            var selectQuery = new SelectQuery(_footballClubConnectionString, _connectionManager.Connection, selectQueryModel);
-            var data = selectQuery.PushAsync();
+            var selectQuery = new SelectQuery(_footballClubConnection, selectQueryModel);
+            var data = selectQuery.PushAsync().Result;
 
-            return Ok(data.Result.Records);
+            return Ok(data.Records);
         }
 
         public IActionResult GetEntitySchema(string entityName)
@@ -123,61 +108,6 @@ namespace DataManager.Controllers
                     statusCode: 500);
         }
 
-        private async Task<IActionResult> GetColumnNamesWithValuesAsync(MySqlCommand sqlCommand)
-        {
-            try
-            {
-                var dataTable = new DataTable();
-                var dataAdapter = new MySqlDataAdapter(sqlCommand);
-
-                await dataAdapter.FillAsync(dataTable);
-
-                var columns = dataTable.Columns;
-                var rows = dataTable.Rows;
-
-                var columnNamesWithValues = new List<Dictionary<string, object>>();
-
-                for (var i = 0; i < rows.Count; i++)
-                {
-                    var columnNameWithValue = new Dictionary<string, object>();
-
-                    for (var j = 0; j < columns.Count; j++)
-                    {
-                        var columnName = columns[j].ColumnName;
-                        var columnValue = rows[i][columnName];
-
-                        columnNameWithValue.Add(columnName, columnValue);
-                    }
-
-                    columnNamesWithValues.Add(columnNameWithValue);
-                }
-
-                return Ok(columnNamesWithValues);
-            }
-
-            catch (Exception ex)
-            {
-                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
-            }
-        }
-
-        private async Task<IActionResult> GetCountAsync(MySqlCommand sqlCommand)
-        {
-            try
-            {
-                using var reader = await sqlCommand.ExecuteReaderAsync();
-                reader.Read();
-                var count = reader.GetValue(0);
-
-                return Ok(count);
-            }
-
-            catch (Exception ex)
-            {
-                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
-            }
-        }
-
         private async Task<IActionResult> ExecuteNonQueryAsync(MySqlCommand sqlCommand)
         {
             try
@@ -191,17 +121,5 @@ namespace DataManager.Controllers
                 return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
             }
         }
-
-        private void OpenConnection()
-        {
-            var footballClubConnectionString = _configuration.GetConnectionString("FootballClub");
-            _footballClubConnection = new MySqlConnection(footballClubConnectionString);
-
-            if (_footballClubConnection.State == ConnectionState.Closed)
-            {
-                _footballClubConnection.Open();
-            }
-        }
-
     }
 }
