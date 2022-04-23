@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using QueryPush.Queries;
 using QueryPush.Models.QueryModels;
 using QueryPush;
+using System.Text;
 
 namespace DataManager.Controllers
 {
@@ -77,49 +78,18 @@ namespace DataManager.Controllers
             throw new NotImplementedException();
         }
 
-        public IActionResult UpdateEntity(string entityName, Dictionary<string, object> columnValues)
+        [HttpPost("UpdateEntity")]
+        public IActionResult UpdateEntity([FromBody] UpdateQueryModel updateQueryModel)
         {
-            throw new NotImplementedException();
+            var updateQuery = new UpdateQuery(_footballClubConnection, updateQueryModel);
+            var result = updateQuery.PushAsync().Result;
+
+            return Ok(result);
         }
 
         public IActionResult GetReferencedTableName(string entityName, string columnName)
         {
             throw new NotImplementedException();
-        }
-
-        private string GetColumnsString(List<string> columns)
-        {
-            if (columns.Count == 0)
-            {
-                columns.Add("*");
-                return columns[0];
-            }
-
-            return string.Join(", ", columns);
-        }
-
-        private IActionResult GetProblemActionResult(string message, Exception ex)
-        {
-            Argument.StringNotNullOrEmpty(message, nameof(message));
-
-            return Problem(
-                    title: "Непредвиденная ошибка во время выполнения запроса к базе данных.",
-                    detail: ex.ToString(),
-                    statusCode: 500);
-        }
-
-        private async Task<IActionResult> ExecuteNonQueryAsync(MySqlCommand sqlCommand)
-        {
-            try
-            {
-                var count = await sqlCommand.ExecuteNonQueryAsync();
-                return Ok(count);
-            }
-
-            catch (Exception ex)
-            {
-                return GetProblemActionResult("Непредвиденная ошибка во время выполнения запроса к базе данных.", ex);
-            }
         }
     }
 }

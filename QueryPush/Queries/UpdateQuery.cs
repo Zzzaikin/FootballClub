@@ -1,9 +1,7 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
-using QueryPush.Models;
 using QueryPush.Models.QueryModels;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace QueryPush.Queries
@@ -20,6 +18,18 @@ namespace QueryPush.Queries
             SetColumns(updateQueryModel);
             SetJoins(updateQueryModel);
             SetFilters(updateQueryModel);
+        }
+
+        protected internal override void SetFilters(UpdateQueryModel updateQueryModel)
+        {
+            Argument.NotNull(updateQueryModel, nameof(updateQueryModel));
+
+            var filters = updateQueryModel.Filters;
+
+            if ((filters == null) || (filters.Count == 0))
+                throw new InvalidOperationException("С тобой всё в порядке? Зачем тебе обновлять все строки?");
+
+            base.SetFilters(updateQueryModel);
         }
 
         protected internal override void SetColumns(UpdateQueryModel updateQueryModel)
@@ -48,8 +58,8 @@ namespace QueryPush.Queries
                 index++;
             }
 
-            SqlExpression = stringBuilder.ToString();
-            SqlCommand = new MySqlCommand(SqlExpression);
+            var sqlExpression = stringBuilder.ToString();
+            SetNewSqlCommandWithOldInstanceParameters(sqlExpression);
 
             index = 0;
 

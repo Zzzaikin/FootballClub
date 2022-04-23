@@ -47,7 +47,7 @@ namespace DataManager.Controllers
         /// <param name="entityName">Название обновляемой сущности.</param>
         /// <param name="columnValues">Пара "Название колонки" - "Значение колонки".</param>
         /// <returns>Результат выполнения запроса с идентификатором обновлённой сущности.</returns>
-        IActionResult UpdateEntity(string entityName, Dictionary<string, object> columnValues);
+        IActionResult UpdateEntity(UpdateQueryModel updateQueryModel);
 
         /// <summary>
         /// Удаляет сущность.

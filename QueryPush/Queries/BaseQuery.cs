@@ -137,8 +137,8 @@ namespace QueryPush.Queries
                 index++;
             }
 
-            SqlExpression = stringBuilder.ToString();
-            SqlCommand = new MySqlCommand(SqlExpression, Connection);
+            var sqlExpression = stringBuilder.ToString();
+            SetNewSqlCommandWithOldInstanceParameters(sqlExpression);
 
             index = 0;
 
@@ -157,7 +157,7 @@ namespace QueryPush.Queries
         {
             var stubs = new List<string>();
 
-            var stubIndex = 0;
+            var stubIndex = SqlCommand == null ? 0 : SqlCommand.Parameters.Count;
 
             foreach (var filter in items)
             {
@@ -168,6 +168,22 @@ namespace QueryPush.Queries
             }
 
             return stubs;
+        }
+
+        protected internal void SetNewSqlCommandWithOldInstanceParameters(string sqlExpression)
+        {
+            SqlExpression = sqlExpression;
+
+            var parameters = SqlCommand?.Parameters;
+            SqlCommand = new MySqlCommand(SqlExpression, Connection);
+
+            if ((parameters != null) && (parameters.Count != 0))
+            {
+                foreach (var parameter in parameters)
+                {
+                    SqlCommand.Parameters.Add(parameter);
+                }
+            }
         }
     }
 }
