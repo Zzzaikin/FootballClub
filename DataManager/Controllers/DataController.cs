@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Threading.Tasks;
 using QueryPush.Queries;
-using QueryPush.Models.QueryModels;
 using QueryPush;
 using System.Text;
+using QueryPush.Models;
 
 namespace DataManager.Controllers
 {
@@ -42,7 +42,7 @@ namespace DataManager.Controllers
         }
 
         [HttpPost("DeleteEntity")]
-        public IActionResult DeleteEntity([FromBody] BaseQueryModel baseQueryModel)
+        public IActionResult DeleteEntity([FromBody] QueryModel baseQueryModel)
         {
             var deleteQuery = new DeleteQuery(_footballClubConnection, baseQueryModel);
             var result = deleteQuery.PushAsync().Result;
@@ -51,7 +51,7 @@ namespace DataManager.Controllers
         }
 
         [HttpPost("GetCountOfEntityRecords")]
-        public IActionResult GetCountOfEntityRecords([FromBody] BaseQueryModel baseQueryModel)
+        public IActionResult GetCountOfEntityRecords([FromBody] QueryModel baseQueryModel)
         {
             var countQuery = new CountQuery(_footballClubConnection, baseQueryModel);
             var result = countQuery.PushAsync().Result;
@@ -60,7 +60,7 @@ namespace DataManager.Controllers
         }
 
         [HttpPost("GetEntities")]
-        public IActionResult GetEntities([FromBody] SelectQueryModel selectQueryModel)
+        public IActionResult GetEntities([FromBody] QueryModel selectQueryModel)
         {
             var selectQuery = new SelectQuery(_footballClubConnection, selectQueryModel);
             var data = selectQuery.PushAsync().Result;
@@ -79,7 +79,7 @@ namespace DataManager.Controllers
         }
 
         [HttpPost("UpdateEntity")]
-        public IActionResult UpdateEntity([FromBody] UpdateQueryModel updateQueryModel)
+        public IActionResult UpdateEntity([FromBody] QueryModel updateQueryModel)
         {
             var updateQuery = new UpdateQuery(_footballClubConnection, updateQueryModel);
             var result = updateQuery.PushAsync().Result;

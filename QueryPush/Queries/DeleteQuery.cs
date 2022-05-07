@@ -1,22 +1,22 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
-using QueryPush.Models.QueryModels;
+using QueryPush.Models;
 using System;
 
 namespace QueryPush.Queries
 {
-    public class DeleteQuery : BaseQuery<BaseQueryModel>
+    public class DeleteQuery : BaseQuery
     {
-        public DeleteQuery(MySqlConnection connection, BaseQueryModel queryModel) : base(connection, queryModel)
+        public DeleteQuery(MySqlConnection connection, QueryModel queryModel) : base(connection, queryModel)
         { }
 
-        protected internal override void Parse(BaseQueryModel queryModel)
+        protected internal override void Parse(QueryModel queryModel)
         {
-            SqlExpression = $"DELETE FROM {queryModel.EntityName} AS {queryModel.EntityName}";
+            SqlExpressionStringBuilder.Append($"DELETE FROM {queryModel.EntityName} AS {queryModel.EntityName}");
             SetFilters(queryModel);
         }
 
-        protected internal override void SetFilters(BaseQueryModel queryModel)
+        protected internal override void SetFilters(QueryModel queryModel)
         {
             Argument.NotNull(queryModel, nameof(queryModel));
             var filters = queryModel.Filters;

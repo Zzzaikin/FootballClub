@@ -2,10 +2,10 @@
 {
     public class Join
     {
-        public Entity Entity { get; set; }
+        public string EntityName { get; set; }
 
-        public Column TargetColumn { get; set; }
+        public string TargetColumn { get; set; }
 
-        public Column JoinedColumn { get; set; }
+        public string JoinedColumn { get; set; }
     }
 }

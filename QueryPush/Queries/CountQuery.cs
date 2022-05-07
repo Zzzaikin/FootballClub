@@ -1,13 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using QueryPush.Models;
-using QueryPush.Models.QueryModels;
 using System.Threading.Tasks;
 
 namespace QueryPush.Queries
 {
-    public class CountQuery : BaseQuery<BaseQueryModel>
+    public class CountQuery : BaseQuery
     {
-        public CountQuery(MySqlConnection connection, BaseQueryModel queryModel) : base(connection, queryModel)
+        public CountQuery(MySqlConnection connection, QueryModel queryModel) : base(connection, queryModel)
         { }
 
         public override DataResult Push()
@@ -32,9 +31,9 @@ namespace QueryPush.Queries
             return new DataResult { RecordsCount = count };
         }
 
-        protected internal override void Parse(BaseQueryModel queryModel)
+        protected internal override void Parse(QueryModel queryModel)
         {
-            SqlExpression = "SELECT COUNT(*)";
+            SqlExpressionStringBuilder.Append("SELECT COUNT(*)");
             SetFrom(queryModel);
             SetJoins(queryModel);
             SetFilters(queryModel);

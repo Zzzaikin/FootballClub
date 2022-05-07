@@ -7,8 +7,6 @@ namespace QueryPush.Models
     {
         private string _leftExpression;
 
-        private string _rightExpression;
-
         private ComparisonType _comparisonType;
 
         public string LeftExpression 
@@ -26,19 +24,11 @@ namespace QueryPush.Models
             get { return _comparisonType; }
             set 
             {
-                Argument.IntegerNotZero((int)value, nameof(value));
+                Argument.IntegerMoreThanZero((int)value, nameof(value));
                 _comparisonType = value; 
             }
         }
 
-        public string RightExpression
-        {
-            get { return _rightExpression; }
-            set
-            {
-                Argument.ValidateStringByAllPolicies(value, nameof(value));
-                _rightExpression = value;
-            }
-        }
+        public object RightExpression { get; set; }
     }
 }

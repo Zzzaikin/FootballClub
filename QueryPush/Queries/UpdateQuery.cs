@@ -1,26 +1,24 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
-using QueryPush.Models.QueryModels;
+using QueryPush.Models;
 using System;
-using System.Text;
 
 namespace QueryPush.Queries
 {
-    public class UpdateQuery : BaseQuery<UpdateQueryModel>
+    public class UpdateQuery : BaseQuery
     {
-        public UpdateQuery(MySqlConnection connection, UpdateQueryModel updateQueryModel) : base(connection, updateQueryModel)
+        public UpdateQuery(MySqlConnection connection, QueryModel updateQueryModel) : base(connection, updateQueryModel)
         { }
 
-        protected internal override void Parse(UpdateQueryModel updateQueryModel)
+        protected internal override void Parse(QueryModel updateQueryModel)
         {
-            SqlExpression = $"UPDATE {updateQueryModel.EntityName} AS {updateQueryModel.EntityName}";
+            SqlExpressionStringBuilder.Append($"UPDATE {updateQueryModel.EntityName} AS {updateQueryModel.EntityName}");
 
             SetColumns(updateQueryModel);
-            SetJoins(updateQueryModel);
             SetFilters(updateQueryModel);
         }
 
-        protected internal override void SetFilters(UpdateQueryModel updateQueryModel)
+        protected internal override void SetFilters(QueryModel updateQueryModel)
         {
             Argument.NotNull(updateQueryModel, nameof(updateQueryModel));
 
@@ -32,7 +30,7 @@ namespace QueryPush.Queries
             base.SetFilters(updateQueryModel);
         }
 
-        protected internal override void SetColumns(UpdateQueryModel updateQueryModel)
+        protected internal override void SetColumns(QueryModel updateQueryModel)
         {
             Argument.NotNull(updateQueryModel, nameof(updateQueryModel));
 
@@ -48,26 +46,22 @@ namespace QueryPush.Queries
                 throw new ArgumentException($"Несоответствие количества колонок и количества их значений.");
 
             var stubs = GetStubs(columns);
-            var stringBuilder = new StringBuilder(SqlExpression);
+            SqlExpressionStringBuilder.Append(" SET ");
 
             var index = 0;
 
             foreach (var column in columns)
             {
-                stringBuilder.Append($" SET {column.Name} = {stubs[index]}");
+                SqlExpressionStringBuilder.Append($"{column} = {stubs[index]}");
+
+                if (index < columnsCount - 1)
+                    SqlExpressionStringBuilder.Append(", ");
+
                 index++;
             }
 
-            var sqlExpression = stringBuilder.ToString();
-            SetNewSqlCommandWithOldInstanceParameters(sqlExpression);
-
-            index = 0;
-
-            foreach (var value in values)
-            {
-                SqlCommand.Parameters.AddWithValue(stubs[index], value);
-                index++;
-            }
+            SetNewSqlCommandWithOldInstanceParameters();
+            AddSqlCommandParameters(stubs, values);
         }
     }
 }

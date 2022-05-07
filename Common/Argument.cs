@@ -5,11 +5,19 @@ namespace Common.Argument
 {
     public static class Argument
     {
+        public static void IntegerMoreThanZero(int validatingInteger, string parameterName)
+        {
+            if (validatingInteger < 0)
+            {
+                throw new ArgumentException($"{parameterName} оказался меньше нулю.");
+            }
+        }
+
         public static void IntegerNotZero(int validatingInteger, string parameterName)
         {
             if (validatingInteger == 0)
             {
-                throw new ArgumentException($"{parameterName} оказался равным нулю.");
+                throw new ArgumentException($"{parameterName} оказался меньше нулю.");
             }
         }
 

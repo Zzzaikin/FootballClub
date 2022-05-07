@@ -2,28 +2,34 @@
 using MySql.Data.MySqlClient;
 using QueryPush.Enums;
 using QueryPush.Models;
-using QueryPush.Models.QueryModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace QueryPush.Queries
 {
-    public abstract class BaseQuery<TQueryModel> where TQueryModel : BaseQueryModel
+    public abstract class BaseQuery
     {
-        public BaseQuery(MySqlConnection connection, TQueryModel queryModel)
+        public BaseQuery(MySqlConnection connection, QueryModel queryModel)
         {
             Connection = connection;
+            SqlExpressionStringBuilder = new StringBuilder();
+
             Parse(queryModel);
         }
 
-        protected string SqlExpression { get; set; }
+        protected internal StringBuilder SqlExpressionStringBuilder { get; set; }
 
-        protected MySqlConnection Connection { get; set; }
+        protected internal string SqlExpression { get => SqlExpressionStringBuilder.ToString(); }
 
-        protected MySqlCommand SqlCommand { get; set; }
+        protected internal MySqlConnection Connection { get; set; }
+
+        protected internal MySqlCommand SqlCommand { get; set; }
+
+        protected internal abstract void Parse(QueryModel queryModel);
 
         public virtual DataResult Push()
         {
@@ -41,48 +47,41 @@ namespace QueryPush.Queries
             return new DataResult { AffectedRows = count };
         }
 
-        protected internal virtual void SetFrom(TQueryModel queryModel)
+        protected internal virtual void SetFrom(QueryModel queryModel)
         {
-            var stringBuilder = new StringBuilder(SqlExpression);
-            stringBuilder.Append($"FROM {queryModel.EntityName} AS {queryModel.EntityName}");
-            SqlExpression = stringBuilder.ToString();
+            SqlExpressionStringBuilder.Append($"FROM {queryModel.EntityName} AS {queryModel.EntityName}");
         }
 
-        protected internal virtual void SetColumns(TQueryModel queryModel)
+        protected internal virtual void SetColumns(QueryModel queryModel)
         {
             Argument.NotNull(queryModel, nameof(queryModel));
 
             var columns = queryModel.Columns;
-            var stringBuilder = new StringBuilder(SqlExpression);
+            var columnsCount = columns.Count;
 
-            if ((columns == null) || (columns.Count == 0))
-            {
-                stringBuilder.Append(" * ");
-                return;
-            }
+            Argument.NotNull(columns, nameof(columns));
+            Argument.IntegerNotZero(columnsCount, nameof(columnsCount));
 
             var index = 0;
-            var lastColumnIndex = columns.Count - 1;
+            var lastColumnIndex = columnsCount - 1;
 
             foreach (var column in columns)
             {
-                stringBuilder.Append($" {column.Name}");
+                SqlExpressionStringBuilder.Append($" {column}");
 
                 if (index != lastColumnIndex)
                 {
-                    stringBuilder.Append(", ");
+                    SqlExpressionStringBuilder.Append(", ");
                 }
 
                 else
                 {
-                    stringBuilder.Append(' ');
+                    SqlExpressionStringBuilder.Append(' ');
                 }
             }
-
-            SqlExpression = stringBuilder.ToString();
         }
 
-        protected internal virtual void SetJoins(TQueryModel queryModel)
+        protected internal virtual void SetJoins(QueryModel queryModel)
         {
             Argument.NotNull(queryModel, nameof(queryModel));
             var joins = queryModel.Joins;
@@ -90,18 +89,14 @@ namespace QueryPush.Queries
             if ((joins == null) || (joins.Count == 0))
                 return;
 
-            var stringBuilder = new StringBuilder(SqlExpression);
-
             foreach (var join in joins)
             {
-                stringBuilder.Append($" LEFT JOIN {join.Entity.Name} AS {join.Entity.Name}");
-                stringBuilder.Append($" ON {join.TargetColumn.Name} = {join.JoinedColumn.Name}");
+                SqlExpressionStringBuilder.Append($" LEFT JOIN {join.EntityName} AS {join.EntityName}");
+                SqlExpressionStringBuilder.Append($" ON {join.TargetColumn} = {join.JoinedColumn}");
             }
-
-            SqlExpression = stringBuilder.ToString();
         }
 
-        protected internal virtual void SetFilters(TQueryModel queryModel)
+        protected internal virtual void SetFilters(QueryModel queryModel)
         {
             Argument.NotNull(queryModel, nameof (queryModel));
             var filters = queryModel.Filters;
@@ -109,11 +104,9 @@ namespace QueryPush.Queries
             if ((filters == null) || (filters.Count == 0))
                 return;
 
-            var stringBuilder = new StringBuilder(SqlExpression);
-            stringBuilder.Append($" WHERE ");
+            SqlExpressionStringBuilder.Append($" WHERE ");
 
             var stubs = GetStubs(filters);
-
             var index = 0;
 
             foreach (var filter in filters)
@@ -132,26 +125,25 @@ namespace QueryPush.Queries
                 var stub = stubs[index];
 
                 var filtersExpression = $" {filter.LeftExpression}{comparisonType}{stub}";
-                stringBuilder.Append(filtersExpression);
+                SqlExpressionStringBuilder.Append(filtersExpression);
 
                 index++;
             }
 
-            var sqlExpression = stringBuilder.ToString();
-            SetNewSqlCommandWithOldInstanceParameters(sqlExpression);
+            SetNewSqlCommandWithOldInstanceParameters();
+            AddSqlCommandParameters(stubs, filters.Select(filter => filter.RightExpression).ToList());
+        }
 
-            index = 0;
+        protected internal void AddSqlCommandParameters(List<string> stubs, List<object> values)
+        {
+            var index = 0;
 
-            foreach (var filter in filters)
+            foreach (var value in values)
             {
-                var stub = stubs[index];
-                SqlCommand.Parameters.AddWithValue(stub, filter.RightExpression);
-
+                SqlCommand.Parameters.AddWithValue(stubs[index], value);
                 index++;
             }
         }
-
-        protected internal abstract void Parse(TQueryModel queryModel);
 
         protected internal List<string> GetStubs(IEnumerable items)
         {
@@ -170,10 +162,8 @@ namespace QueryPush.Queries
             return stubs;
         }
 
-        protected internal void SetNewSqlCommandWithOldInstanceParameters(string sqlExpression)
+        protected internal void SetNewSqlCommandWithOldInstanceParameters()
         {
-            SqlExpression = sqlExpression;
-
             var parameters = SqlCommand?.Parameters;
             SqlCommand = new MySqlCommand(SqlExpression, Connection);
 

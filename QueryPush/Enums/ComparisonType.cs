@@ -2,7 +2,7 @@
 {
     public enum ComparisonType
     {
-        Equal = 1,
+        Equal,
         NotEqual,
         IsNull,
         NotNull

@@ -1,17 +1,15 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
 using QueryPush.Models;
-using QueryPush.Models.QueryModels;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace QueryPush.Queries
 {
-    public class SelectQuery : BaseQuery<SelectQueryModel>
+    public class SelectQuery : BaseQuery
     {
-        public SelectQuery(MySqlConnection connection, SelectQueryModel selectQueryModel) : base(connection, selectQueryModel) { }
+        public SelectQuery(MySqlConnection connection, QueryModel selectQueryModel) : base(connection, selectQueryModel) { }
 
         public override DataResult Push()
         {
@@ -37,9 +35,9 @@ namespace QueryPush.Queries
             return new DataResult { Records = columnNamesWithValues };
         }
 
-        protected internal override void Parse(SelectQueryModel selectQueryModel)
+        protected internal override void Parse(QueryModel selectQueryModel)
         {
-            SqlExpression = "SELECT";
+            SqlExpressionStringBuilder.Append("SELECT");
 
             SetColumns(selectQueryModel);
             SetFrom(selectQueryModel);
@@ -53,10 +51,7 @@ namespace QueryPush.Queries
             Argument.RecordsCountLessThanMaxValue(count);
             Argument.IntegerNotZero(count, nameof(count));
 
-            var stringBuilder = new StringBuilder(SqlExpression);
-            stringBuilder.Append($" LIMIT {count} OFFSET {from}");
-
-            SqlExpression = stringBuilder.ToString();
+            SqlExpressionStringBuilder.Append($" LIMIT {count} OFFSET {from}");
         }
 
         private List<Dictionary<string, object>> GetDictionaryCollectionFromDataTable(DataTable dataTable)

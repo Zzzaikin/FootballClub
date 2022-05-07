@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QueryPush.Models.QueryModels;
+using QueryPush.Models;
 using System;
 using System.Collections.Generic;
 
@@ -31,7 +31,7 @@ namespace DataManager.Controllers
         /// </summary>
         /// <param name="entityName">Название сущности.</param>
         /// <returns>Статус выполнения запроса с количеством записей игроков.</returns>
-        IActionResult GetCountOfEntityRecords(BaseQueryModel baseQueryModel);
+        IActionResult GetCountOfEntityRecords(QueryModel baseQueryModel);
 
         /// <summary>
         /// Добавляет сущность.
@@ -47,7 +47,7 @@ namespace DataManager.Controllers
         /// <param name="entityName">Название обновляемой сущности.</param>
         /// <param name="columnValues">Пара "Название колонки" - "Значение колонки".</param>
         /// <returns>Результат выполнения запроса с идентификатором обновлённой сущности.</returns>
-        IActionResult UpdateEntity(UpdateQueryModel updateQueryModel);
+        IActionResult UpdateEntity(QueryModel updateQueryModel);
 
         /// <summary>
         /// Удаляет сущность.
@@ -55,13 +55,13 @@ namespace DataManager.Controllers
         /// <param name="entityName">Название удаляемой сущности.</param>
         /// <param name="entityId">Идентификатор удаляемой сущности.</param>
         /// <returns>Результат выполнения запроса.</returns>
-        IActionResult DeleteEntity(BaseQueryModel baseQueryModel);
+        IActionResult DeleteEntity(QueryModel baseQueryModel);
 
         /// <summary>
         /// Возвращает сущности на указанном интервале.
         /// </summary>
         /// <param name="selectQueryModel">Тело запроса на Select.</param>
         /// <returns>Сущности со статусом запроса.</returns>
-        IActionResult GetEntities(SelectQueryModel selectQueryModel);
+        IActionResult GetEntities(QueryModel selectQueryModel);
     }
 }
