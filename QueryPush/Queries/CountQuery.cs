@@ -11,8 +11,6 @@ namespace QueryPush.Queries
 
         public override DataResult Push()
         {
-            SqlCommand ??= new MySqlCommand(SqlExpression, Connection);
-
             using var reader = SqlCommand.ExecuteReader();
             reader.Read();
             var count = reader.GetValue(0);
@@ -22,8 +20,6 @@ namespace QueryPush.Queries
 
         public async override Task<DataResult> PushAsync()
         {
-            SqlCommand ??= new MySqlCommand(SqlExpression, Connection);
-
             using var reader = await SqlCommand.ExecuteReaderAsync();
             await reader.ReadAsync();
             var count = reader.GetValue(0);

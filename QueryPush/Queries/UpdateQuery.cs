@@ -1,5 +1,6 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
+using QueryPush.Helpers;
 using QueryPush.Models;
 using System;
 
@@ -45,23 +46,23 @@ namespace QueryPush.Queries
             if (columnsCount != values.Count)
                 throw new ArgumentException($"Несоответствие количества колонок и количества их значений.");
 
-            var stubs = GetStubs(columns);
+            const string paramPrefix = "columnParam";
+            var stubs = QueryHelper.GetStubs(paramPrefix, columns);
             SqlExpressionStringBuilder.Append(" SET ");
 
             var index = 0;
 
             foreach (var column in columns)
             {
-                SqlExpressionStringBuilder.Append($"{column} = {stubs[index]}");
+                var stub = stubs[index];
+                SqlExpressionStringBuilder.Append($"{column} = {stub}");
 
                 if (index < columnsCount - 1)
                     SqlExpressionStringBuilder.Append(", ");
 
+                Parameters.Add(new MySqlParameter(stub, values[index]));
                 index++;
             }
-
-            SetNewSqlCommandWithOldInstanceParameters();
-            AddSqlCommandParameters(stubs, values);
         }
     }
 }

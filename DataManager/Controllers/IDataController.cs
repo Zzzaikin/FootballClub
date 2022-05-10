@@ -12,21 +12,6 @@ namespace DataManager.Controllers
     public interface IDataController
     {
         /// <summary>
-        /// Возвращает название связанной таблицы по колонке.
-        /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <param name="columnName">Название колонки.</param>
-        /// <returns>Название связанной таблицы по колонке</returns>
-        IActionResult GetReferencedTableName(string entityName, string columnName);
-
-        /// <summary>
-        /// Возвращает схему таблицы сущности.
-        /// </summary>
-        /// <param name="entityName">Название сущности.</param>
-        /// <returns>Статус выполнения запроса с схемой сущности.</returns>
-        IActionResult GetEntitySchema(string entityName);
-
-        /// <summary>
         /// Возвращает количество записей.
         /// </summary>
         /// <param name="entityName">Название сущности.</param>
@@ -39,7 +24,7 @@ namespace DataManager.Controllers
         /// <param name="entityName">Название добавляемой сущности.</param>
         /// <param name="columnValues">Пара "Название колонки" - "Значение колонки".</param>
         /// <returns>Статус выполнения запроса с идентификатором добавленной сущности.</returns>
-        IActionResult InsertEntity(string entityName, Dictionary<string, object> columnValues);
+        IActionResult InsertEntity(QueryModel insertQueryModel);
 
         /// <summary>
         /// Обновляет сущность.

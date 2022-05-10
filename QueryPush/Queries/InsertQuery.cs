@@ -1,6 +1,8 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
+using QueryPush.Helpers;
 using QueryPush.Models;
+using System;
 
 namespace QueryPush.Queries
 {
@@ -10,11 +12,11 @@ namespace QueryPush.Queries
 
         protected internal override void Parse(QueryModel queryModel)
         {
-            SqlExpressionStringBuilder.Append($"INSERT INTO {queryModel.EntityName} (");
+            SqlExpressionStringBuilder.Append($"INSERT INTO {queryModel.EntityName} ( Id, ");
             SetColumns(queryModel);
-            SetValues(queryModel);
 
             SqlExpressionStringBuilder.Append(") VALUES (");
+            SetValues(queryModel);
         }
 
         private void SetValues(QueryModel queryModel)
@@ -27,15 +29,24 @@ namespace QueryPush.Queries
             Argument.NotNull(values, nameof(values));
             Argument.IntegerNotZero(valuesCount, nameof(valuesCount));
 
-            var stubs = GetStubs(values);
+            SqlExpressionStringBuilder.Append($"\'{Guid.NewGuid()}\', ");
+
+            const string paramPrefix = "valueParam";
+            var stubs = QueryHelper.GetStubs(paramPrefix, values);
             var index = 0;
 
             foreach (var value in values)
             {
-                SqlExpressionStringBuilder.Append(stubs[index]);
+                var stub = stubs[index];
+                SqlExpressionStringBuilder.Append(stub);
 
                 if (index < valuesCount - 1)
                     SqlExpressionStringBuilder.Append(", ");
+
+                else SqlExpressionStringBuilder.Append(") ");
+
+                Parameters.Add(new MySqlParameter(stub, value));
+                index++;
             }
         }
     }

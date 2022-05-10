@@ -7,7 +7,7 @@ namespace QueryPush
     {
         private static ConnectionManager _instance;
 
-        private static object _locker = new object();
+        private static readonly object _locker = new();
 
         public MySqlConnection Connection { get; private set; }
 
@@ -16,7 +16,7 @@ namespace QueryPush
             Connection = new MySqlConnection(connectionString);
         }
 
-        public static ConnectionManager GetInstance(string connextionString)
+        public static ConnectionManager GetInstance(string conneсtionString)
         {
             if (_instance == null)
             {
@@ -24,7 +24,7 @@ namespace QueryPush
                 {
                     if (_instance == null)
                     {
-                        _instance = new ConnectionManager(connextionString);
+                        _instance = new ConnectionManager(conneсtionString);
                     }
                 }
             }

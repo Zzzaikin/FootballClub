@@ -1,11 +1,11 @@
 ﻿using Common.Argument;
 using MySql.Data.MySqlClient;
 using QueryPush.Enums;
+using QueryPush.Helpers;
 using QueryPush.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +17,12 @@ namespace QueryPush.Queries
         {
             Connection = connection;
             SqlExpressionStringBuilder = new StringBuilder();
+            Parameters = new List<DbParameter>();
 
             Parse(queryModel);
         }
+
+        protected List<DbParameter> Parameters { get; set; }
 
         protected internal StringBuilder SqlExpressionStringBuilder { get; set; }
 
@@ -27,23 +30,28 @@ namespace QueryPush.Queries
 
         protected internal MySqlConnection Connection { get; set; }
 
-        protected internal MySqlCommand SqlCommand { get; set; }
+        protected internal MySqlCommand SqlCommand
+        {
+            get 
+            {
+                var sqlCommand = new MySqlCommand(SqlExpression, Connection);
+                sqlCommand.Parameters.AddRange(Parameters.ToArray());
+
+                return sqlCommand;
+            }
+        }
 
         protected internal abstract void Parse(QueryModel queryModel);
 
         public virtual DataResult Push()
         {
-            SqlCommand ??= new MySqlCommand(SqlExpression, Connection);
             var count = SqlCommand.ExecuteNonQuery();
-
             return new DataResult { AffectedRows = count };
         }
 
         public async virtual Task<DataResult> PushAsync()
         {
-            SqlCommand ??= new MySqlCommand(SqlExpression, Connection);
             var count = await SqlCommand.ExecuteNonQueryAsync();
-
             return new DataResult { AffectedRows = count };
         }
 
@@ -78,6 +86,8 @@ namespace QueryPush.Queries
                 {
                     SqlExpressionStringBuilder.Append(' ');
                 }
+
+                index++;
             }
         }
 
@@ -106,7 +116,8 @@ namespace QueryPush.Queries
 
             SqlExpressionStringBuilder.Append($" WHERE ");
 
-            var stubs = GetStubs(filters);
+            const string paramPrefix = "filterParam";
+            var stubs = QueryHelper.GetStubs(paramPrefix, filters);
             var index = 0;
 
             foreach (var filter in filters)
@@ -127,52 +138,8 @@ namespace QueryPush.Queries
                 var filtersExpression = $" {filter.LeftExpression}{comparisonType}{stub}";
                 SqlExpressionStringBuilder.Append(filtersExpression);
 
+                Parameters.Add(new MySqlParameter(stub, filter.RightExpression));
                 index++;
-            }
-
-            SetNewSqlCommandWithOldInstanceParameters();
-            AddSqlCommandParameters(stubs, filters.Select(filter => filter.RightExpression).ToList());
-        }
-
-        protected internal void AddSqlCommandParameters(List<string> stubs, List<object> values)
-        {
-            var index = 0;
-
-            foreach (var value in values)
-            {
-                SqlCommand.Parameters.AddWithValue(stubs[index], value);
-                index++;
-            }
-        }
-
-        protected internal List<string> GetStubs(IEnumerable items)
-        {
-            var stubs = new List<string>();
-
-            var stubIndex = SqlCommand == null ? 0 : SqlCommand.Parameters.Count;
-
-            foreach (var filter in items)
-            {
-                var stub = $"@{stubIndex}";
-
-                stubs.Add(stub);
-                stubIndex++;
-            }
-
-            return stubs;
-        }
-
-        protected internal void SetNewSqlCommandWithOldInstanceParameters()
-        {
-            var parameters = SqlCommand?.Parameters;
-            SqlCommand = new MySqlCommand(SqlExpression, Connection);
-
-            if ((parameters != null) && (parameters.Count != 0))
-            {
-                foreach (var parameter in parameters)
-                {
-                    SqlCommand.Parameters.Add(parameter);
-                }
             }
         }
     }
